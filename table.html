@@ -893,6 +893,8 @@
 
         // Function to render table rows with pagination
         async function renderReportTable() {
+            // Ensure window.reportsMapping is always defined
+            if (!window.reportsMapping) window.reportsMapping = {};
             console.log('Rendering table with reports:', reports);
             const tableBody = document.getElementById('reportTableBody');
             if (!tableBody) {
@@ -931,7 +933,7 @@
                 const urgency = getDueDateUrgency(report.dueDate);
                 const deadlinesStatus = getUpcomingDeadlinesStatus(report.dueDate, report.submittedDate);
                 const mappingKey = getMappingKey(report.name, report.region);
-                const mappingData = window.reportsMapping[mappingKey] || {};
+                const mappingData = (window.reportsMapping && window.reportsMapping[mappingKey]) ? window.reportsMapping[mappingKey] : {};
 
                 console.log('Rendering report:', report.id, report.name, status, mca);
 
