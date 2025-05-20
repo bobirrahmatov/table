@@ -1,0 +1,52 @@
+{
+  "Monthly Financial Report_Global": {
+    "reportName": "Monthly Financial Report",
+    "region": "Global",
+    "frequency": "Monthly",
+    "reportRecipients": ["finance@company.com", "management@company.com"],
+    "requirements": "Must include quarterly projections and variance analysis. Data should be sourced from the central data warehouse.",
+    "schedule": "Due by 15th of each month. Review meeting scheduled for the 20th.",
+    "savedLocation": "\\\\server\\finance\\reports\\monthly",
+    "dlList": ["John Smith (JS12345)", "Bob Rahmatov (BR47149)"]
+  },
+  "Weekly Operations Report_EMEA": {
+    "reportName": "Weekly Operations Report",
+    "region": "EMEA",
+    "frequency": "Weekly",
+    "reportRecipients": ["operations@company.com", "emea@company.com"],
+    "requirements": "Include weekly KPIs and operational metrics for all EMEA branches. Highlight any significant deviations from targets.",
+    "schedule": "Due every Monday by 10:00 AM local time.",
+    "savedLocation": "\\\\server\\operations\\reports\\weekly\\EMEA",
+    "dlList": ["Sarah Johnson (SJ67890)", "Emily Wilson (EW13579)"]
+  },
+  "Quarterly Compliance Report_Global": {
+    "reportName": "Quarterly Compliance Report",
+    "region": "Global",
+    "frequency": "Quarterly",
+    "reportRecipients": ["compliance@company.com", "legal@company.com", "audit@company.com"],
+    "requirements": "Must include regulatory compliance checks, internal audit findings, and risk assessments for all regions.",
+    "schedule": "Due by the last day of each quarter.",
+    "savedLocation": "\\\\server\\compliance\\reports\\quarterly\\global",
+    "dlList": ["David Lee (DL24680)", "Maria Garcia (MG97531)", "Thomas Rodriguez (TR13579)"]
+  },
+   "Semi-Monthly Audit Report_APAC": {
+    "reportName": "Semi-Monthly Audit Report",
+    "region": "APAC",
+    "frequency": "Semi-Monthly",
+    "reportRecipients": ["audit@company.com", "apac@company.com"],
+    "requirements": "Summarize audit activities and findings for the APAC region. Include progress on remediation efforts.",
+    "schedule": "Due by the 15th and the last day of each month.",
+    "savedLocation": "\\\\server\\audit\\reports\\semi-monthly\\APAC",
+    "dlList": ["Lisa Zhang (LZ86420)", "Michael Brown (MB24680)"]
+  },
+   "Daily Status Update_NAM": {
+    "reportName": "Daily Status Update",
+    "region": "NAM",
+    "frequency": "Daily",
+    "reportRecipients": ["nam-leads@company.com"],
+    "requirements": "Brief summary of key activities, achievements, and blockers for the NAM region.",
+    "schedule": "Due every morning by 9:00 AM local time.",
+    "savedLocation": "\\\\server\\operations\\reports\\daily\\NAM",
+    "dlList": ["Emily Wilson (EW13579)"]
+  }
+}
