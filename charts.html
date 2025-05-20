@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report Tracking System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: "#eff6ff",
+                100: "#dbeafe",
+                200: "#bfdbfe",
+                300: "#93c5fd",
+                400: "#60a5fa",
+                500: "#3b82f6",
+                600: "#2563eb",
+                700: "#1d4ed8",
+                800: "#1e40af",
+                900: "#1e3a8a",
+                950: "#172554",
+              },
+            },
+            keyframes: {
+              "fade-in-out": {
+                "0%": { opacity: 0 },
+                "10%": { opacity: 1 },
+                "90%": { opacity: 1 },
+                "100%": { opacity: 0 },
+              },
+            },
+            animation: {
+              "fade-in-out": "fade-in-out 3s ease-in-out forwards",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+
+  <body>
+    <!-- ====== Charts Dashboard Start ====== -->
+    <div class="p-4 mx-auto max-w-screen-xl md:p-6">
+      <div class="grid grid-cols-12 gap-4 md:gap-6">
+        <div class="col-span-12 space-y-6 xl:col-span-7">
+          <!-- Metric Group One -->
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
+            <!-- Metric Item Start -->
+            <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800">
+                <svg class="fill-gray-800 dark:fill-white/90" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M8.80443 5.60156C7.59109 5.60156 6.60749 6.58517 6.60749 7.79851C6.60749 9.01185 7.59109 9.99545 8.80443 9.99545C10.0178 9.99545 11.0014 9.01185 11.0014 7.79851C11.0014 6.58517 10.0178 5.60156 8.80443 5.60156ZM5.10749 7.79851C5.10749 5.75674 6.76267 4.10156 8.80443 4.10156C10.8462 4.10156 12.5014 5.75674 12.5014 7.79851C12.5014 9.84027 10.8462 11.4955 8.80443 11.4955C6.76267 11.4955 5.10749 9.84027 5.10749 7.79851ZM4.86252 15.3208C4.08769 16.0881 3.70377 17.0608 3.51705 17.8611C3.48384 18.0034 3.5211 18.1175 3.60712 18.2112C3.70161 18.3141 3.86659 18.3987 4.07591 18.3987H13.4249C13.6343 18.3987 13.7992 18.3141 13.8937 18.2112C13.9797 18.1175 14.017 18.0034 13.9838 17.8611C13.7971 17.0608 13.4132 16.0881 12.6383 15.3208C11.8821 14.572 10.6899 13.955 8.75042 13.955C6.81096 13.955 5.61877 14.572 4.86252 15.3208ZM3.8071 14.2549C4.87163 13.2009 6.45602 12.455 8.75042 12.455C11.0448 12.455 12.6292 13.2009 13.6937 14.2549C14.7397 15.2906 15.2207 16.5607 15.4446 17.5202C15.7658 18.8971 14.6071 19.8987 13.4249 19.8987H4.07591C2.89369 19.8987 1.73504 18.8971 2.05628 17.5202C2.28015 16.5607 2.76117 15.2906 3.8071 14.2549ZM15.3042 11.4955C14.4702 11.4955 13.7006 11.2193 13.0821 10.7533C13.3742 10.3314 13.6054 9.86419 13.7632 9.36432C14.1597 9.75463 14.7039 9.99545 15.3042 9.99545C16.5176 9.99545 17.5012 9.01185 17.5012 7.79851C17.5012 6.58517 16.5176 5.60156 15.3042 5.60156C14.7039 5.60156 14.1597 5.84239 13.7632 6.23271C13.6054 5.73284 13.3741 5.26561 13.082 4.84371C13.7006 4.37777 14.4702 4.10156 15.3042 4.10156C17.346 4.10156 19.0012 5.75674 19.0012 7.79851C19.0012 9.84027 17.346 11.4955 15.3042 11.4955ZM19.9248 19.8987H16.3901C16.7014 19.4736 16.9159 18.969 16.9827 18.3987H19.9248C20.1341 18.3987 20.2991 18.3141 20.3936 18.2112C20.4796 18.1175 20.5169 18.0034 20.4837 17.861C20.2969 17.0607 19.913 16.088 19.1382 15.3208C18.4047 14.5945 17.261 13.9921 15.4231 13.9566C15.2232 13.6945 14.9995 13.437 14.7491 13.1891C14.5144 12.9566 14.262 12.7384 13.9916 12.5362C14.3853 12.4831 14.8044 12.4549 15.2503 12.4549C17.5447 12.4549 19.1291 13.2008 20.1936 14.2549C21.2395 15.2906 21.7206 16.5607 21.9444 17.5202C22.2657 18.8971 21.107 19.8987 19.9248 19.8987Z" fill=""></path>
+                </svg>
+              </div>
+              <div class="mt-5 flex items-end justify-between">
+                <div>
+                  <span class="text-sm text-gray-500 dark:text-gray-400">On-Time</span>
+                  <h4 class="mt-2 text-title-sm font-bold text-gray-800 dark:text-white/90" id="metricCustomers">0</h4>
+                </div>
+                <span class="flex items-center gap-1 rounded-full bg-success-50 py-0.5 pl-2 pr-2.5 text-sm font-medium text-success-600 dark:bg-success-500/15 dark:text-success-500" id="metricCustomersChange">
+                  <svg class="fill-current" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.56462 1.62393C5.70193 1.47072 5.90135 1.37432 6.12329 1.37432C6.1236 1.37432 6.12391 1.37432 6.12422 1.37432C6.31631 1.37415 6.50845 1.44731 6.65505 1.59381L9.65514 4.5918C9.94814 4.88459 9.94831 5.35947 9.65552 5.65246C9.36273 5.94546 8.88785 5.94562 8.59486 5.65283L6.87329 3.93247L6.87329 10.125C6.87329 10.5392 6.53751 10.875 6.12329 10.875C5.70908 10.875 5.37329 10.5392 5.37329 10.125L5.37329 3.93578L3.65516 5.65282C3.36218 5.94562 2.8873 5.94547 2.5945 5.65248C2.3017 5.35949 2.30185 4.88462 2.59484 4.59182L5.56462 1.62393Z" fill=""></path>
+                  </svg>
+                  0%
+                </span>
+              </div>
+            </div>
+            <!-- Metric Item End -->
+            <!-- Metric Item Start -->
+            <div class="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+              <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800">
+                <svg class="fill-gray-800 dark:fill-white/90" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M11.665 3.75621C11.8762 3.65064 12.1247 3.65064 12.3358 3.75621L18.7807 6.97856L12.3358 10.2009C12.1247 10.3065 11.8762 10.3065 11.665 10.2009L5.22014 6.97856L11.665 3.75621ZM4.29297 8.19203V16.0946C4.29297 16.3787 4.45347 16.6384 4.70757 16.7654L11.25 20.0366V11.6513C11.1631 11.6205 11.0777 11.5843 10.9942 11.5426L4.29297 8.19203ZM12.75 20.037L19.2933 16.7654C19.5474 16.6384 19.7079 16.3787 19.7079 16.0946V8.19202L13.0066 11.5426C12.9229 11.5844 12.8372 11.6208 12.75 11.6516V20.037ZM13.0066 2.41456C12.3732 2.09786 11.6277 2.09786 10.9942 2.41456L4.03676 5.89319C3.27449 6.27432 2.79297 7.05342 2.79297 7.90566V16.0946C2.79297 16.9469 3.27448 17.726 4.03676 18.1071L10.9942 21.5857L11.3296 20.9149L10.9942 21.5857C11.6277 21.9024 12.3732 21.9024 13.0066 21.5857L19.9641 18.1071C20.7264 17.726 21.2079 16.9469 21.2079 16.0946V7.90566C21.2079 7.05342 20.7264 6.27432 19.9641 5.89319L13.0066 2.41456Z" fill=""></path>
+                </svg>
+              </div>
+              <div class="mt-5 flex items-end justify-between">
+                <div>
+                  <span class="text-sm text-gray-500 dark:text-gray-400">Late</span>
+                  <h4 class="mt-2 text-title-sm font-bold text-gray-800 dark:text-white/90" id="metricOrders">0</h4>
+                </div>
+                <span class="flex items-center gap-1 rounded-full bg-error-50 py-0.5 pl-2 pr-2.5 text-sm font-medium text-error-600 dark:bg-error-500/15 dark:text-error-500" id="metricOrdersChange">
+                  <svg class="fill-current" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.31462 10.3761C5.45194 10.5293 5.65136 10.6257 5.87329 10.6257C5.8736 10.6257 5.8739 10.6257 5.87421 10.6257C6.0663 10.6259 6.25845 10.5527 6.40505 10.4062L9.40514 7.4082C9.69814 7.11541 9.69831 6.64054 9.40552 6.34754C9.11273 6.05454 8.63785 6.05438 8.34486 6.34717L6.62329 8.06753L6.62329 1.875C6.62329 1.46079 6.28751 1.125 5.87329 1.125C5.45908 1.125 5.12329 1.46079 5.12329 1.875L5.12329 8.06422L3.40516 6.34719C3.11218 6.05439 2.6373 6.05454 2.3445 6.34752C2.0517 6.64051 2.05185 7.11538 2.34484 7.40818L5.31462 10.3761Z" fill=""></path>
+                  </svg>
+                  0%
+                </span>
+              </div>
+            </div>
+            <!-- Metric Item End -->
+          </div>
+          <!-- Metric Group One -->
+          <!-- ====== Chart One Start ====== -->
+          <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 sm:px-6 sm:pt-6 dark:border-gray-800 dark:bg-white/[0.03]">
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Monthly Sales</h3>
+            </div>
+            <div class="max-w-full overflow-x-auto custom-scrollbar">
+              <div id="chartOne" class="-ml-5 h-full min-w-[690px] pl-2 xl:min-w-full" style="min-height: 195px;"></div>
+            </div>
+          </div>
+          <!-- ====== Chart One End ====== -->
+        </div>
+        <div class="col-span-12 xl:col-span-5">
+          <!-- ====== Chart Two Start ====== -->
+          <div class="rounded-2xl border border-gray-200 bg-gray-100 dark:border-gray-800 dark:bg-white/[0.03]">
+            <div class="shadow-default rounded-2xl bg-white px-5 pb-11 pt-5 dark:bg-gray-900 sm:px-6 sm:pt-6">
+              <div class="flex justify-between">
+                <div>
+                  <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Monthly Target</h3>
+                  <p class="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">Target you've set for each month</p>
+                </div>
+              </div>
+              <div class="relative max-h-[195px]">
+                <div id="chartTwo" class="h-full" style="min-height: 229px;"></div>
+                <span class="absolute left-1/2 top-[85%] -translate-x-1/2 -translate-y-[85%] rounded-full bg-success-50 px-3 py-1 text-xs font-medium text-success-600 dark:bg-success-500/15 dark:text-success-500" id="monthlyTargetChange">+0%</span>
+              </div>
+              <p class="mx-auto mt-1.5 w-full max-w-[380px] text-center text-sm text-gray-500 sm:text-base" id="monthlyTargetNote">
+                You earn $0 today, it's higher than last month. Keep up your good work!
+              </p>
+            </div>
+            <div class="flex items-center justify-center gap-5 px-6 py-3.5 sm:gap-8 sm:py-5">
+              <div>
+                <p class="mb-1 text-center text-theme-xs text-gray-500 dark:text-gray-400 sm:text-sm">Target</p>
+                <p class="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg" id="monthlyTargetValue">$0K</p>
+              </div>
+              <div class="h-7 w-px bg-gray-200 dark:bg-gray-800"></div>
+              <div>
+                <p class="mb-1 text-center text-theme-xs text-gray-500 dark:text-gray-400 sm:text-sm">Revenue</p>
+                <p class="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg" id="monthlyRevenueValue">$0K</p>
+              </div>
+              <div class="h-7 w-px bg-gray-200 dark:bg-gray-800"></div>
+              <div>
+                <p class="mb-1 text-center text-theme-xs text-gray-500 dark:text-gray-400 sm:text-sm">Today</p>
+                <p class="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg" id="monthlyTodayValue">$0K</p>
+              </div>
+            </div>
+          </div>
+          <!-- ====== Chart Two End ====== -->
+        </div>
+        <div class="col-span-12">
+          <!-- ====== Chart Three Start ====== -->
+          <div class="rounded-2xl border border-gray-200 bg-white px-5 pb-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
+            <div class="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
+              <div class="w-full">
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white/90">Statistics</h3>
+                <p class="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">Target you've set for each month</p>
+              </div>
+            </div>
+            <div class="max-w-full overflow-x-auto custom-scrollbar">
+              <div id="chartThree" class="-ml-4 min-w-[700px] pl-2 xl:min-w-full" style="min-height: 325px;"></div>
+            </div>
+          </div>
+          <!-- ====== Chart Three End ====== -->
+        </div>
+      </div>
+    </div>
+    <!-- ====== Charts Dashboard End ====== -->
+
+    <script>
+      // Initialize reports array
+      let reports = [];
+
+      // Helper function to format dates for display
+      function formatDate(dateString) {
+        if (!dateString) return "--";
+        const date = new Date(dateString);
+        const options = { year: "numeric", month: "short", day: "numeric" };
+        return date.toLocaleDateString("en-US", options);
+      }
+
+      // Calculate the status based on the due and submitted dates
+      function calculateStatus(dueDate, submittedDate) {
+        // If submittedDate is empty, status is Pending
+        if (!submittedDate) {
+          return "Pending";
+        }
+
+        // Calculate the difference in days
+        const dueDateTime = new Date(dueDate).getTime();
+        const submittedDateTime = new Date(submittedDate).getTime();
+        const diffDays = Math.floor(
+          (submittedDateTime - dueDateTime) / (1000 * 60 * 60 * 24)
+        );
+
+        // If submitted before or on the due date, status is Submitted
+        if (diffDays <= 0) {
+          return "Submitted";
+        }
+
+        // Otherwise, it's Submitted with days late
+        return `Submitted (+${diffDays}D Late)`;
+      }
+
+      // Calculate MCA based on status
+      function calculateMCA(status) {
+        if (status === "Pending") {
+          return "Pending";
+        } else if (status === "On Time") {
+          return "Pass";
+        } else {
+          // If it's any form of late
+          return "Fail";
+        }
+      }
+
+      // Function to calculate urgency percentage and color
+      function getDueDateUrgency(dueDate) {
+        const today = new Date();
+        const due = new Date(dueDate);
+        const diffTime = due - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        // If due date is in the past, return 100% red
+        if (diffDays < 0) {
+          return { percentage: 100, color: "bg-red-500" };
+        }
+
+        // Calculate percentage based on 10 days window
+        const percentage = Math.min(
+          100,
+          Math.max(0, ((10 - diffDays) / 10) * 100)
+        );
+
+        // Determine color based on days remaining
+        if (diffDays <= 3) {
+          return { percentage, color: "bg-red-500" };
+        } else if (diffDays <= 7) {
+          return { percentage, color: "bg-yellow-500" };
+        } else {
+          return { percentage: 0, color: "bg-emerald-500" }; // Using emerald-500 for a more visible green
+        }
+      }
+
+      // Function to render the status badge with appropriate color
+      function getStatusBadge(status) {
+        let colorClass = "bg-gray-100 text-gray-800";
+
+        if (status === "Submitted") {
+          colorClass = "bg-green-100 text-green-800";
+        } else if (status === "Pending") {
+          colorClass = "bg-yellow-100 text-yellow-800";
+        } else if (status.includes("Late")) {
+          colorClass = "bg-red-100 text-red-800";
+        }
+
+        return `<span class="${colorClass} text-md font-medium px-2 py-0.5 rounded">${status}</span>`;
+      }
+
+      // Function to render the region badge with appropriate color
+      function getRegionBadge(region) {
+        let colorClass = "bg-gray-100 text-gray-800";
+
+        if (region === "Global") {
+          colorClass = "bg-blue-100 text-blue-800";
+        } else if (region === "EMEA") {
+          colorClass = "bg-purple-100 text-purple-800";
+        }
+
+        return `<span class="${colorClass} text-md font-medium px-2 py-0.5 rounded">${region}</span>`;
+      }
+
+      // Function to calculate upcoming deadlines status
+      function getUpcomingDeadlinesStatus(dueDate, submittedDate) {
+        // If report is submitted, show Submitted status
+        if (submittedDate) {
+          const dueDateTime = new Date(dueDate).getTime();
+          const submittedDateTime = new Date(submittedDate).getTime();
+          const diffDays = Math.floor(
+            (submittedDateTime - dueDateTime) / (1000 * 60 * 60 * 24)
+          );
+
+          // If submitted before or on due date
+          if (diffDays <= 0) {
+            return {
+              status: "Submitted",
+              color: "bg-emerald-500",
+              textColor: "text-emerald-500",
+              percentage: 0,
+            };
+          }
+        }
+
+        const today = new Date();
+        const due = new Date(dueDate);
+        const diffTime = due - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        // Calculate percentage based on 30 days window
+        const percentage = Math.min(
+          100,
+          Math.max(0, ((30 - diffDays) / 30) * 100)
+        );
+
+        // Determine color and status based on days remaining
+        if (diffDays <= 7) {
+          return {
+            status: `Critical (${diffDays} day${diffDays === 1 ? "" : "s"})`,
+            color: "bg-red-500",
+            textColor: "text-red-500",
+            percentage,
+          };
+        } else if (diffDays <= 14) {
+          return {
+            status: `Soon (${diffDays} days)`,
+            color: "bg-yellow-500",
+            textColor: "text-yellow-500",
+            percentage,
+          };
+        } else {
+          return {
+            status: `Upcoming (${diffDays} days)`,
+            color: "bg-emerald-500",
+            textColor: "text-emerald-500",
+            percentage,
+          };
+        }
+      }
+
+      // Function to render table rows with pagination
+      function renderReportTable() {
+        console.log("Rendering table with reports:", reports);
+        const tableBody = document.getElementById("reportTableBody");
+        if (!tableBody) {
+          console.error("Table body element not found!");
+          return;
+        }
+        tableBody.innerHTML = "";
+
+        // Calculate pagination
+        const currentPage = parseInt(
+          document.querySelector(".pagination-active")?.textContent || "1"
+        );
+        const itemsPerPage = 10;
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedReports = reports.slice(startIndex, endIndex);
+
+        console.log("Paginated reports:", paginatedReports);
+
+        // Update pagination info
+        const totalPages = Math.ceil(reports.length / itemsPerPage);
+        updatePaginationInfo(
+          startIndex + 1,
+          Math.min(endIndex, reports.length),
+          reports.length,
+          totalPages
+        );
+
+        // Render paginated reports
+        paginatedReports.forEach((report) => {
+          // Calculate status and MCA
+          const status = calculateStatus(report.dueDate, report.submittedDate);
+          const mca = calculateMCA(status);
+          const urgency = getDueDateUrgency(report.dueDate);
+          const deadlinesStatus = getUpcomingDeadlinesStatus(
+            report.dueDate,
+            report.submittedDate
+          );
+
+          console.log("Rendering report:", report.id, report.name, status, mca);
+
+          const row = document.createElement("tr");
+          row.className = "border-b";
+          row.setAttribute("data-id", report.id);
+
+          row.innerHTML = `
+    <td class="px-4 py-3 text-center">
+        <div class="flex items-center justify-center space-x-2">
+            <button data-id="${
+              report.id
+            }" class="edit-button py-2 px-3 flex items-center text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5" viewbox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+            </svg>
+                Edit
+        </button>
+            <button data-id="${
+              report.id
+            }" class="expand-preview-button py-2 px-3 flex items-center text-sm font-medium text-center text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 -ml-0.5 expand-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+                Preview
+            </button>
+        </div>
+    </td>
+    <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">${
+      report.name
+    }</th>
+    <td class="px-4 py-3 break-words">
+        <div class="resize-x overflow-auto min-w-[200px] max-w-full">
+            ${report.coverage}
+        </div>
+    </td>    
+    <td class="px-4 py-3 whitespace-nowrap">${getRegionBadge(
+      report.region
+    )}</td>
+    <td class="px-4 py-3 whitespace-nowrap">${report.frequency}</td>
+    <td class="px-4 py-3 whitespace-nowrap">${getStatusBadge(status)}</td>
+    <td class="px-4 py-3 whitespace-nowrap">${formatDate(report.dueDate)}</td>
+    <td class="px-4 py-3 whitespace-nowrap">
+        <div class="flex flex-col">
+            ${(() => {
+              const deadlinesStatus = getUpcomingDeadlinesStatus(
+                report.dueDate,
+                report.submittedDate
+              );
+              return `
+                    <div class="text-md mb-1 font-medium ${deadlinesStatus.textColor}">${deadlinesStatus.status}</div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="h-2 rounded-full ${deadlinesStatus.color}" style="width: ${deadlinesStatus.percentage}%"></div>
+                    </div>
+                `;
+            })()}
+        </div>
+    </td>
+    <td class="px-4 py-3 whitespace-nowrap">${
+      report.submittedDate ? formatDate(report.submittedDate) : "--"
+    }</td>
+    <td class="px-4 py-3 whitespace-nowrap">${report.maker}</td>
+    <td class="px-4 py-3 break-words">
+        <div class="resize-x overflow-auto min-w-[200px] max-w-full">
+            ${report.makerNotes || "--"}
+        </div>
+    </td>  
+    <td class="px-4 py-3 whitespace-nowrap">${
+      report.sendDate ? formatDate(report.sendDate) : "--"
+    }</td>
+    <td class="px-4 py-3 whitespace-nowrap">${report.onDrive}</td>
+    <td class="px-4 py-3 whitespace-nowrap">${report.checker || "--"}</td>
+    <td class="px-4 py-3 break-words">
+        <div class="resize-x overflow-auto min-w-[200px] max-w-full">
+            ${report.checkerNote || "--"}
+        </div>
+    </td>  
+    <td class="px-4 py-3 whitespace-nowrap">${report.delayNotified}</td>
+    <td class="px-4 py-3 whitespace-nowrap">${getStatusBadge(mca)}</td>
+`;
+
+          // Add preview row
+          const previewRow = document.createElement("tr");
+          previewRow.className = "preview-row hidden bg-gray-50";
+          const mappingData = window.reportsMapping[report.id] || {};
+          previewRow.innerHTML = `
+    <td colspan="17" class="px-4 py-3">
+        <div class="grid grid-cols-4 gap-6">
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Report Name</label>
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] transition-all duration-200 hover:bg-gray-200 resize-y overflow-auto cursor-s-resize">
+                    <p class="text-sm text-gray-900">${
+                      mappingData.reportName || report.name
+                    }</p>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Region</label>
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] transition-all duration-200 hover:bg-gray-200 resize-y overflow-auto cursor-s-resize">
+                    <p class="text-sm text-gray-900">${getRegionBadge(
+                      mappingData.region || report.region
+                    )}</p>
+                </div>
+            </div>
+            <div class="space-y-2 invisible">
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] resize-y overflow-auto"></div>
+            </div>
+            <div class="space-y-2 invisible">
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] resize-y overflow-auto"></div>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Frequency</label>
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] transition-all duration-200 hover:bg-gray-200 resize-y overflow-auto cursor-s-resize">
+                    <p class="text-sm text-gray-900">${
+                      mappingData.frequency || report.frequency
+                    }</p>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Report Recipients</label>
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] transition-all duration-200 hover:bg-gray-200 resize-y overflow-auto cursor-s-resize">
+                    <p class="text-sm text-gray-900">${
+                      mappingData.reportRecipients
+                        ? mappingData.reportRecipients.join(", ")
+                        : "--"
+                    }</p>
+                </div>
+            </div>
+            <div class="space-y-2 invisible">
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] resize-y overflow-auto"></div>
+            </div>
+            <div class="space-y-2 invisible">
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] resize-y overflow-auto"></div>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Requirements</label>
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] transition-all duration-200 hover:bg-gray-200 resize-y overflow-auto cursor-s-resize">
+                    <p class="text-sm text-gray-900">${
+                      mappingData.requirements || "--"
+                    }</p>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Schedule</label>
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] transition-all duration-200 hover:bg-gray-200 resize-y overflow-auto cursor-s-resize">
+                    <p class="text-sm text-gray-900">${
+                      mappingData.schedule || "--"
+                    }</p>
+                </div>
+            </div>
+            <div class="space-y-2 invisible">
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] resize-y overflow-auto"></div>
+            </div>
+            <div class="space-y-2 invisible">
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] resize-y overflow-auto"></div>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Saved Location</label>
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] transition-all duration-200 hover:bg-gray-200 resize-y overflow-auto cursor-s-resize">
+                    <p class="text-sm text-gray-900">${
+                      mappingData.savedLocation || "--"
+                    }</p>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Distribution List</label>
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] transition-all duration-200 hover:bg-gray-200 resize-y overflow-auto cursor-s-resize">
+                    <p class="text-sm text-gray-900">${
+                      mappingData.dlList ? mappingData.dlList.join(", ") : "--"
+                    }</p>
+                </div>
+            </div>
+            <div class="space-y-2 invisible">
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] resize-y overflow-auto"></div>
+            </div>
+            <div class="space-y-2 invisible">
+                <div class="bg-gray-100 rounded-lg p-3 min-h-[50px] resize-y overflow-auto"></div>
+            </div>
+        </div>
+    </td>
+`;
+
+          tableBody.appendChild(row);
+          tableBody.appendChild(previewRow);
+        });
+
+        // Attach event listeners for edit buttons
+        attachEditListeners();
+      }
+
+      // Function to update pagination information
+      function updatePaginationInfo(start, end, total, totalPages) {
+        const paginationInfo = document.querySelector(".pagination-info");
+        if (paginationInfo) {
+          paginationInfo.innerHTML = `
+                                Showing
+                                <span class="font-semibold text-gray-900">${start}-${end}</span>
+                                of
+                                <span class="font-semibold text-gray-900">${total}</span>
+                            `;
+        }
+
+        // Update pagination buttons
+        const paginationContainer = document.querySelector(
+          ".pagination-buttons"
+        );
+        if (paginationContainer) {
+          let paginationHTML = "";
+
+          // Previous button
+          paginationHTML += `
+                                <li>
+                                    <a href="#" class="pagination-prev flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                                        <span class="sr-only">Previous</span>
+                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                        </svg>
+                                    </a>
+                                </li>
+                            `;
+
+          // Page numbers
+          for (let i = 1; i <= totalPages; i++) {
+            const isActive =
+              i ===
+              parseInt(
+                document.querySelector(".pagination-active")?.textContent || "1"
+              );
+            paginationHTML += `
+                                    <li>
+                                        <a href="#" class="pagination-page flex items-center justify-center text-md py-2 px-3 leading-tight ${
+                                          isActive
+                                            ? "text-primary-600 bg-primary-50 border border-primary-300 pagination-active"
+                                            : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                                        }">${i}</a>
+                                    </li>
+                                `;
+          }
+
+          // Next button
+          paginationHTML += `
+                                <li>
+                                    <a href="#" class="pagination-next flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                                        <span class="sr-only">Next</span>
+                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                        </svg>
+                                    </a>
+                                </li>
+                            `;
+
+          paginationContainer.innerHTML = paginationHTML;
+        }
+      }
+
+      // Function to handle pagination
+      function handlePagination(e) {
+        e.preventDefault();
+        const target = e.target.closest("a");
+        if (!target) return;
+
+        const currentPage = parseInt(
+          document.querySelector(".pagination-active")?.textContent || "1"
+        );
+        const totalPages = Math.ceil(reports.length / 10);
+
+        let newPage = currentPage;
+
+        if (target.classList.contains("pagination-prev") && currentPage > 1) {
+          newPage = currentPage - 1;
+        } else if (
+          target.classList.contains("pagination-next") &&
+          currentPage < totalPages
+        ) {
+          newPage = currentPage + 1;
+        } else if (target.classList.contains("pagination-page")) {
+          newPage = parseInt(target.textContent);
+        }
+
+        if (newPage !== currentPage) {
+          // Update pagination buttons
+          const paginationContainer = document.querySelector(
+            ".pagination-buttons"
+          );
+          const pageButtons =
+            paginationContainer.querySelectorAll(".pagination-page");
+
+          // Remove active class from current page
+          pageButtons.forEach((button) => {
+            button.classList.remove(
+              "text-primary-600",
+              "bg-primary-50",
+              "border-primary-300",
+              "pagination-active"
+            );
+          });
+
+          // Add active class to new page
+          const newPageButton = Array.from(pageButtons).find(
+            (button) => parseInt(button.textContent) === newPage
+          );
+          if (newPageButton) {
+            newPageButton.classList.add(
+              "text-primary-600",
+              "bg-primary-50",
+              "border-primary-300",
+              "pagination-active"
+            );
+          }
+
+          // Re-render the table with the new page
+          renderReportTable();
+        }
+      }
+
+      // Function to attach edit event listeners
+      function attachEditListeners() {
+        document.querySelectorAll(".edit-button").forEach((button) => {
+          button.addEventListener("click", function () {
+            const reportId = this.getAttribute("data-id");
+            openEditModal(reportId);
+          });
+        });
+
+        document
+          .querySelectorAll(".expand-preview-button")
+          .forEach((button) => {
+            button.addEventListener("click", function () {
+              const reportId = this.getAttribute("data-id");
+              const row = this.closest("tr");
+              const previewRow = row.nextElementSibling;
+              const icon = this.querySelector(".expand-icon");
+
+              // Toggle preview row
+              previewRow.classList.toggle("hidden");
+
+              // Toggle icon
+              if (previewRow.classList.contains("hidden")) {
+                icon.innerHTML =
+                  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />';
+              } else {
+                icon.innerHTML =
+                  '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />';
+              }
+            });
+          });
+      }
+
+      // Function to open the edit modal and populate fields
+      function openEditModal(reportId) {
+        const report = reportId ? reports.find((r) => r.id == reportId) : null;
+        const modal = document.getElementById("editReportModal");
+        const form = document.getElementById("reportForm");
+        const saveButton = document.getElementById("saveButton");
+
+        // Set the modal title based on whether we're editing or adding
+        document.getElementById("modal-title").textContent = reportId
+          ? "Edit Report"
+          : "Add New Report";
+
+        // Store initial form values
+        const initialValues = {};
+
+        // Populate the form with report data if editing
+        if (report) {
+          document.getElementById("reportId").value = report.id;
+          document.getElementById("reportName").value = report.name || "";
+          document.getElementById("coverage").value = report.coverage || "";
+          document.getElementById("region").value = report.region || "";
+          document.getElementById("frequency").value = report.frequency || "";
+          document.getElementById("dueDate").value = report.dueDate || "";
+          document.getElementById("submittedDate").value =
+            report.submittedDate || "";
+          document.getElementById("maker").value = report.maker || "";
+          document.getElementById("makerNotes").value = report.makerNotes || "";
+          document.getElementById("sendDate").value = report.sendDate || "";
+          document.getElementById("onDrive").value = report.onDrive || "No";
+          document.getElementById("checker").value = report.checker || "";
+          document.getElementById("checkerNote").value =
+            report.checkerNote || "";
+          document.getElementById("delayNotified").value =
+            report.delayNotified || "N/A";
+
+          // Store initial values
+          Object.keys(report).forEach((key) => {
+            initialValues[key] = report[key];
+          });
+        } else {
+          // Clear the form for adding a new report
+          form.reset();
+          document.getElementById("reportId").value = "";
+          // Set current date for due date
+          const today = new Date().toISOString().split("T")[0];
+          document.getElementById("dueDate").value = today;
+          document.getElementById("delayNotified").value = "N/A";
+          document.getElementById("onDrive").value = "No";
+        }
+
+        // Show the modal
+        modal.classList.remove("hidden");
+
+        // Add event listeners for form changes
+        const formInputs = form.querySelectorAll("input, select, textarea");
+        formInputs.forEach((input) => {
+          input.addEventListener("input", () => {
+            checkFormChanges(form, initialValues, saveButton);
+          });
+          input.addEventListener("change", () => {
+            checkFormChanges(form, initialValues, saveButton);
+          });
+        });
+      }
+
+      // Function to check if form has changed
+      function checkFormChanges(form, initialValues, saveButton) {
+        const formData = new FormData(form);
+        let hasChanges = false;
+
+        // For new reports, enable save button if any field has a value
+        if (Object.keys(initialValues).length === 0) {
+          for (const [key, value] of formData.entries()) {
+            if (value && value.trim() !== "") {
+              hasChanges = true;
+              break;
+            }
+          }
+        } else {
+          // For existing reports, check if any value has changed
+          for (const [key, value] of formData.entries()) {
+            if (initialValues[key] !== value) {
+              hasChanges = true;
+              break;
+            }
+          }
+        }
+
+        saveButton.disabled = !hasChanges;
+      }
+
+      // Function to save the report (add or update)
+      function saveReport(formData) {
+        try {
+          const reportId = formData.get("reportId")
+            ? parseInt(formData.get("reportId"))
+            : null;
+
+          // Create a report object from form data
+          const report = {
+            id: reportId || Math.max(...reports.map((r) => r.id)) + 1,
+            name: formData.get("reportName"),
+            coverage: formData.get("coverage"),
+            region: formData.get("region"),
+            frequency: formData.get("frequency"),
+            dueDate: formData.get("dueDate"),
+            submittedDate: formData.get("submittedDate"),
+            maker: formData.get("maker"),
+            makerNotes: formData.get("makerNotes"),
+            sendDate: formData.get("sendDate"),
+            onDrive: formData.get("onDrive"),
+            checker: formData.get("checker"),
+            checkerNote: formData.get("checkerNote"),
+            delayNotified: formData.get("delayNotified"),
+          };
+
+          // Validate required fields
+          if (
+            !report.name ||
+            !report.coverage ||
+            !report.region ||
+            !report.frequency ||
+            !report.dueDate
+          ) {
+            showNotification("Please fill in all required fields", "error");
+            return;
+          }
+
+          // If editing an existing report, update it
+          if (reportId) {
+            const index = reports.findIndex((r) => r.id === reportId);
+            if (index !== -1) {
+              reports[index] = report;
+              showNotification("Report updated successfully", "success");
+            } else {
+              showNotification("Report not found", "error");
+              return;
+            }
+          } else {
+            // Otherwise add a new report
+            reports.push(report);
+            showNotification("New report added successfully", "success");
+          }
+
+          // Save to Confluence
+          saveDataToConfluence();
+
+          // Re-render the table to reflect changes
+          renderReportTable();
+
+          // Close the modal
+          closeModal();
+        } catch (error) {
+          console.error("Error saving report:", error);
+          showNotification("Failed to save report. Please try again.", "error");
+        }
+      }
+
+      // Function to show a notification
+      function showNotification(message, type = "success") {
+        // Remove any existing notifications
+        const existingNotifications =
+          document.querySelectorAll(".notification");
+        existingNotifications.forEach((notification) => notification.remove());
+
+        // Create and append the notification
+        const notification = document.createElement("div");
+        const bgColor = type === "success" ? "bg-green-500" : "bg-red-500";
+        const icon =
+          type === "success"
+            ? '<svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>'
+            : '<svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>';
+
+        notification.className = `notification fixed bottom-4 right-4 ${bgColor} text-white px-4 py-2 rounded shadow-lg z-50 animate-fade-in-out flex items-center`;
+        notification.innerHTML = `${icon}${message}`;
+        document.body.appendChild(notification);
+
+        // Remove notification after 3 seconds
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+      }
+
+      // Function to close the modal
+      function closeModal() {
+        document.getElementById("editReportModal").classList.add("hidden");
+      }
+
+      // Function for searching/filtering the table
+      function filterTable(searchTerm) {
+        const statusFilter = document.querySelector(
+          'input[name="statusFilter"]:checked'
+        ).value;
+        const globalChecked = document.getElementById("filterGlobal")?.checked;
+        const emeaChecked = document.getElementById("filterEMEA")?.checked;
+        const pendingChecked =
+          document.getElementById("filterPending")?.checked;
+        const onTimeChecked = document.getElementById("filterOnTime")?.checked;
+        const lateChecked = document.getElementById("filterLate")?.checked;
+        const makerFilter = document.getElementById("filterMaker")
+          ? Array.from(
+              document.getElementById("filterMaker").selectedOptions
+            ).map((option) => option.value)
+          : [];
+        const checkerFilter = document.getElementById("filterChecker")
+          ? Array.from(
+              document.getElementById("filterChecker").selectedOptions
+            ).map((option) => option.value)
+          : [];
+        const daysFilter = document.getElementById("filterDays")?.value;
+
+        // Filter reports based on criteria
+        const filteredReports = reports.filter((report) => {
+          const submittedDate = report.submittedDate;
+          const status = calculateStatus(report.dueDate, submittedDate);
+          const dueDate = new Date(report.dueDate);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+
+          // Check status filter
+          let matchesStatusFilter = true;
+          if (statusFilter === "submitted") {
+            matchesStatusFilter = !!submittedDate && submittedDate !== "";
+          } else if (statusFilter === "open") {
+            matchesStatusFilter = !submittedDate || submittedDate === "";
+          }
+
+          // Check search term
+          const matchesSearch =
+            !searchTerm ||
+            report.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            report.coverage.toLowerCase().includes(searchTerm.toLowerCase());
+
+          // Check region filter
+          const matchesRegion =
+            (!globalChecked && !emeaChecked) ||
+            (globalChecked && report.region === "Global") ||
+            (emeaChecked && report.region === "EMEA");
+
+          // Check status filter
+          const matchesStatus =
+            (!pendingChecked && !onTimeChecked && !lateChecked) ||
+            (pendingChecked && status === "Pending") ||
+            (onTimeChecked && status === "Submitted") ||
+            (lateChecked && status.includes("Late"));
+
+          // Check maker filter
+          const matchesMaker =
+            makerFilter.length === 0 ||
+            makerFilter.includes(report.maker) ||
+            report.maker === "--";
+
+          // Check checker filter
+          const matchesChecker =
+            checkerFilter.length === 0 ||
+            checkerFilter.includes(report.checker) ||
+            report.checker === "--";
+
+          // Check days filter
+          const matchesDays =
+            !daysFilter ||
+            daysFilter.trim() === "" ||
+            (dueDate &&
+              Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24)) <=
+                parseInt(daysFilter) &&
+              Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24)) >= 0);
+
+          return (
+            matchesStatusFilter &&
+            matchesSearch &&
+            matchesRegion &&
+            matchesStatus &&
+            matchesMaker &&
+            matchesChecker &&
+            matchesDays
+          );
+        });
+
+        // Update reports array with filtered results
+        const originalReports = [...reports];
+        reports = filteredReports;
+
+        // Re-render the table
+        renderReportTable();
+
+        // Restore original reports array
+        reports = originalReports;
+
+        // Update pagination info
+        const currentPage = parseInt(
+          document.querySelector(".pagination-active")?.textContent || "1"
+        );
+        const itemsPerPage = 10;
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(
+          startIndex + itemsPerPage,
+          filteredReports.length
+        );
+
+        const paginationInfo = document.querySelector(".pagination-info");
+        if (paginationInfo) {
+          paginationInfo.innerHTML = `
+                    Showing
+                    <span class="font-semibold text-gray-900">${
+                      startIndex + 1
+                    }-${endIndex}</span>
+                    of
+                    <span class="font-semibold text-gray-900">${
+                      filteredReports.length
+                    }</span>
+                `;
+        }
+
+        // Update pagination buttons
+        const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
+        updatePaginationButtons(totalPages, currentPage);
+      }
+
+      // Function to update pagination buttons
+      function updatePaginationButtons(totalPages, currentPage) {
+        const paginationContainer = document.querySelector(
+          ".pagination-buttons"
+        );
+        if (paginationContainer) {
+          let paginationHTML = "";
+
+          // Previous button
+          paginationHTML += `
+                    <li>
+                        <a href="#" class="pagination-prev flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                            <span class="sr-only">Previous</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </li>
+                `;
+
+          // Page numbers
+          for (let i = 1; i <= totalPages; i++) {
+            const isActive = i === currentPage;
+            paginationHTML += `
+                        <li>
+                            <a href="#" class="pagination-page flex items-center justify-center text-md py-2 px-3 leading-tight ${
+                              isActive
+                                ? "text-primary-600 bg-primary-50 border border-primary-300 pagination-active"
+                                : "text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                            }">${i}</a>
+                        </li>
+                    `;
+          }
+
+          // Next button
+          paginationHTML += `
+                    <li>
+                        <a href="#" class="pagination-next flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700">
+                            <span class="sr-only">Next</span>
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </li>
+                `;
+
+          paginationContainer.innerHTML = paginationHTML;
+        }
+      }
+
+      // Function to clear all filters
+      function clearAllFilters() {
+        // Clear search input
+        const searchInput = document.getElementById("simple-search");
+        searchInput.value = "";
+
+        // Reset status filter to Open
+        document.getElementById("filterOpen").checked = true;
+
+        // Reset the table to show all rows
+        const tableRows = document.querySelectorAll("#reportTableBody tr");
+        tableRows.forEach((row) => {
+          row.classList.remove("hidden");
+        });
+
+        // Apply the Open filter
+        filterTable("");
+
+        // Show success notification
+        showNotification("All filters cleared successfully");
+      }
+
+      // Function to refresh the table
+      function refreshTable() {
+        loadDataFromConfluence();
+      }
+
+      // Function to export table data to Excel
+      function exportToExcel() {
+        // Get the table data
+        const table = document.getElementById("reportTableBody");
+        const rows = Array.from(table.querySelectorAll("tr"));
+
+        // Prepare the data for export
+        const data = rows.map((row) => {
+          const cells = Array.from(row.cells);
+          return {
+            Report: cells[1].textContent.trim(),
+            Coverage: cells[2].textContent.trim(),
+            Region: cells[3].textContent.trim(),
+            Frequency: cells[4].textContent.trim(),
+            Status: cells[5].textContent.trim(),
+            "Due Date": cells[6].textContent.trim(),
+            "Submitted Date": cells[7].textContent.trim(),
+            Maker: cells[8].textContent.trim(),
+            "Maker Notes": cells[9].textContent.trim(),
+            "Send Date": cells[10].textContent.trim(),
+            "On Drive": cells[11].textContent.trim(),
+            Checker: cells[12].textContent.trim(),
+            "Checker Note": cells[13].textContent.trim(),
+            "Delay Notified": cells[14].textContent.trim(),
+            MCA: cells[15].textContent.trim(),
+          };
+        });
+
+        // Create a new workbook
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(data);
+
+        // Add the worksheet to the workbook
+        XLSX.utils.book_append_sheet(wb, ws, "Reports");
+
+        // Generate the Excel file
+        const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+
+        // Get current month and year
+        const now = new Date();
+        const month = now.toLocaleString("default", { month: "long" });
+        const year = now.getFullYear();
+
+        // Create a blob and download link
+        const blob = new Blob([wbout], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `EMEA_Critical_Reports_Tracker_${month}_${year}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        // Show success notification
+        showNotification("Report exported successfully");
+      }
+
+      // Function to load data from Confluence attachment
+      async function loadDataFromConfluence() {
+        try {
+          console.log("Attempting to load data from Confluence...");
+          const [reportsResponse, mappingResponse] = await Promise.all([
+            fetch(
+              "https://cedt-confluence.net/confluence/download/attachments/2740868871/reports.json?api=v2"
+            ),
+            fetch(
+              "https://cedt-confluence.net/confluence/download/attachments/2740868871/reports_mapping.json?api=v2"
+            ),
+          ]);
+
+          if (!reportsResponse.ok || !mappingResponse.ok) {
+            console.log(
+              "Confluence response not OK:",
+              reportsResponse.status,
+              mappingResponse.status
+            );
+            throw new Error(
+              `Failed to load data: ${reportsResponse.status} ${mappingResponse.status}`
+            );
+          }
+
+          const [reportsData, mappingData] = await Promise.all([
+            reportsResponse.json(),
+            mappingResponse.json(),
+          ]);
+
+          console.log(
+            "Successfully loaded data from Confluence:",
+            reportsData,
+            mappingData
+          );
+          reports = reportsData;
+          window.reportsMapping = mappingData; // Store mapping data globally
+          renderReportTable();
+          // Apply initial filter to show Open reports
+          filterTable("");
+          showNotification("Data loaded successfully");
+        } catch (error) {
+          console.error("Error loading data:", error);
+          console.log("Using fallback data...");
+
+          // Fallback dummy data
+          reports = [
+            {
+              id: 1,
+              name: "Monthly Financial Report",
+              coverage: "Q1 2024 Financial Analysis",
+              region: "Global",
+              frequency: "Monthly",
+              dueDate: "2024-03-15",
+              submittedDate: "2024-03-14",
+              maker: "John Smith",
+              makerNotes: "Completed ahead of schedule",
+              sendDate: "2024-03-14",
+              onDrive: "Yes",
+              checker: "Maria Garcia",
+              checkerNote: "All checks passed",
+              delayNotified: "N/A",
+            },
+            {
+              id: 2,
+              name: "Weekly Operations Report",
+              coverage: "EMEA Operations Week 10",
+              region: "EMEA",
+              frequency: "Weekly",
+              dueDate: "2024-03-18",
+              submittedDate: "",
+              maker: "Sarah Johnson",
+              makerNotes: "Pending final review",
+              sendDate: "",
+              onDrive: "No",
+              checker: "",
+              checkerNote: "",
+              delayNotified: "No",
+            },
+            {
+              id: 3,
+              name: "Quarterly Compliance Report",
+              coverage: "Q1 2024 Compliance Review",
+              region: "Global",
+              frequency: "Quarterly",
+              dueDate: "2024-03-31",
+              submittedDate: "",
+              maker: "David Lee",
+              makerNotes: "In progress",
+              sendDate: "",
+              onDrive: "No",
+              checker: "",
+              checkerNote: "",
+              delayNotified: "No",
+            },
+            {
+              id: 4,
+              name: "Monthly Risk Assessment",
+              coverage: "March 2024 Risk Analysis",
+              region: "EMEA",
+              frequency: "Monthly",
+              dueDate: "2024-03-20",
+              submittedDate: "2024-03-19",
+              maker: "Emily Wilson",
+              makerNotes: "Completed with minor findings",
+              sendDate: "2024-03-19",
+              onDrive: "Yes",
+              checker: "Robert Chen",
+              checkerNote: "Reviewed and approved",
+              delayNotified: "N/A",
+            },
+            {
+              id: 5,
+              name: "Semi-Monthly Audit Report",
+              coverage: "March 1-15 Audit Results",
+              region: "Global",
+              frequency: "Semi-Monthly",
+              dueDate: "2024-03-16",
+              submittedDate: "2024-03-17",
+              maker: "Lisa Zhang",
+              makerNotes: "Delayed due to system issues",
+              sendDate: "2024-03-17",
+              onDrive: "Yes",
+              checker: "Michael Brown",
+              checkerNote: "Accepted with explanation",
+              delayNotified: "Yes",
+            },
+          ];
+
+          // Fallback mapping data
+          window.reportsMapping = {
+            1: {
+              reportName: "Monthly Financial Report",
+              region: "Global",
+              frequency: "Monthly",
+              reportRecipients: [
+                "finance@company.com",
+                "management@company.com",
+              ],
+              requirements:
+                "Must include quarterly projections and variance analysis",
+              schedule: "Due by 15th of each month",
+              savedLocation: "\\server\finance\reports\monthly",
+              dlList: ["John Smith", "Sarah Johnson"],
+            },
+            2: {
+              reportName: "Weekly Operations Report",
+              region: "EMEA",
+              frequency: "Weekly",
+              reportRecipients: ["operations@company.com", "emea@company.com"],
+              requirements: "Include weekly KPIs and operational metrics",
+              schedule: "Due every Monday by 10:00 AM",
+              savedLocation: "\\server\operations\reports\weekly",
+              dlList: ["David Lee", "Emily Wilson"],
+            },
+            // ... add more mapping data as needed ...
+          };
+
+          console.log(
+            "Fallback data assigned:",
+            reports,
+            window.reportsMapping
+          );
+          renderReportTable();
+          filterTable("");
+          showNotification("Using fallback data", "error");
+        }
+      }
+
+      // Function to save data to Confluence
+      async function saveDataToConfluence() {
+        try {
+          // First, get the attachment ID
+          const attachmentsResponse = await fetch(
+            "https://cedt-confluence.net/confluence/rest/api/content/2740868871/child/attachment?filename=reports.json"
+          );
+          const attachmentsData = await attachmentsResponse.json();
+
+          if (
+            !attachmentsData.results ||
+            attachmentsData.results.length === 0
+          ) {
+            throw new Error("Attachment not found");
+          }
+
+          const attachmentId = attachmentsData.results[0].id;
+
+          // Update the existing attachment
+          const formData = new FormData();
+          const blob = new Blob([JSON.stringify(reports, null, 2)], {
+            type: "application/json",
+          });
+          formData.append("file", blob, "reports.json");
+
+          const response = await fetch(
+            `https://cedt-confluence.net/confluence/rest/api/content/2740868871/child/attachment/${attachmentId}`,
+            {
+              method: "POST",
+              headers: {
+                "X-Atlassian-Token": "no-check",
+              },
+              body: formData,
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(
+              `Failed to save data: ${response.status} ${response.statusText}`
+            );
+          }
+
+          showNotification("Data saved successfully");
+        } catch (error) {
+          console.error("Error saving data:", error);
+          showNotification("Failed to save data: " + error.message, "error");
+        }
+      }
+
+      // Function to open the preview modal
+      function openPreviewModal(reportId) {
+        const report = reports.find((r) => r.id == reportId);
+        if (!report) return;
+
+        const modal = document.createElement("div");
+        modal.id = "previewModal";
+        modal.className =
+          "fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50";
+
+        const status = calculateStatus(report.dueDate, report.submittedDate);
+        const mca = calculateMCA(status);
+        const deadlinesStatus = getUpcomingDeadlinesStatus(
+          report.dueDate,
+          report.submittedDate
+        );
+
+        modal.innerHTML = `
+                <div class="relative top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-5 border w-11/12 md:w-3/4 lg:w-2/3 shadow-lg rounded-md bg-white">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium text-gray-900">Report Preview</h3>
+                        <button class="close-preview text-gray-400 hover:text-gray-500">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Report Name</label>
+                                <p class="mt-1 text-sm text-gray-900">${
+                                  report.name
+                                }</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Coverage</label>
+                                <p class="mt-1 text-sm text-gray-900">${
+                                  report.coverage
+                                }</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Region</label>
+                                <p class="mt-1 text-sm text-gray-900">${getRegionBadge(
+                                  report.region
+                                )}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Frequency</label>
+                                <p class="mt-1 text-sm text-gray-900">${
+                                  report.frequency
+                                }</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Status</label>
+                                <p class="mt-1 text-sm text-gray-900">${getStatusBadge(
+                                  status
+                                )}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Due Date</label>
+                                <p class="mt-1 text-sm text-gray-900">${formatDate(
+                                  report.dueDate
+                                )}</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Upcoming Deadlines</label>
+                                <p class="mt-1 text-sm text-gray-900">
+                                    <div class="text-md mb-1 font-medium ${
+                                      deadlinesStatus.textColor
+                                    }">${deadlinesStatus.status}</div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="h-2 rounded-full ${
+                                          deadlinesStatus.color
+                                        }" style="width: ${
+          deadlinesStatus.percentage
+        }%"></div>
+                                    </div>
+                                </p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Submitted Date</label>
+                                <p class="mt-1 text-sm text-gray-900">${
+                                  report.submittedDate
+                                    ? formatDate(report.submittedDate)
+                                    : "--"
+                                }</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Maker</label>
+                                <p class="mt-1 text-sm text-gray-900">${
+                                  report.maker
+                                }</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Maker Notes</label>
+                                <p class="mt-1 text-sm text-gray-900">${
+                                  report.makerNotes || "--"
+                                }</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Send Date</label>
+                                <p class="mt-1 text-sm text-gray-900">${
+                                  report.sendDate
+                                    ? formatDate(report.sendDate)
+                                    : "--"
+                                }</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">On Drive</label>
+                                <p class="mt-1 text-sm text-gray-900">${
+                                  report.onDrive
+                                }</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Checker</label>
+                                <p class="mt-1 text-sm text-gray-900">${
+                                  report.checker || "--"
+                                }</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Checker Note</label>
+                                <p class="mt-1 text-sm text-gray-900">${
+                                  report.checkerNote || "--"
+                                }</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Delay Notified</label>
+                                <p class="mt-1 text-sm text-gray-900">${
+                                  report.delayNotified
+                                }</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">MCA</label>
+                                <p class="mt-1 text-sm text-gray-900">${getStatusBadge(
+                                  mca
+                                )}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+        document.body.appendChild(modal);
+
+        // Add event listener for close button
+        modal.querySelector(".close-preview").addEventListener("click", () => {
+          modal.remove();
+        });
+
+        // Close modal when clicking outside
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) {
+            modal.remove();
+          }
+        });
+      }
+
+      // Add all event listeners once the DOM is fully loaded
+      document.addEventListener("DOMContentLoaded", function () {
+        // Set Open as default filter
+        document.getElementById("filterOpen").checked = true;
+
+        // Load initial data from Confluence
+        loadDataFromConfluence();
+
+        // Add event listener for status filter radio buttons
+        document
+          .querySelectorAll('input[name="statusFilter"]')
+          .forEach((radio) => {
+            radio.addEventListener("change", function () {
+              filterTable(document.getElementById("simple-search").value);
+            });
+          });
+
+        // Add event listeners for filter checkboxes
+        [
+          "filterGlobal",
+          "filterEMEA",
+          "filterPending",
+          "filterOnTime",
+          "filterLate",
+        ].forEach((id) => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.addEventListener("change", function () {
+              filterTable(document.getElementById("simple-search").value);
+            });
+          }
+        });
+
+        // Add event listener for days filter
+        const daysFilter = document.getElementById("filterDays");
+        if (daysFilter) {
+          daysFilter.addEventListener("input", function () {
+            filterTable(document.getElementById("simple-search").value);
+          });
+        }
+
+        // Add event listeners for maker and checker filters
+        ["filterMaker", "filterChecker"].forEach((id) => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.addEventListener("change", function () {
+              filterTable(document.getElementById("simple-search").value);
+            });
+          }
+        });
+
+        // Add event listener for the filter dropdown button
+        document
+          .getElementById("filterDropdownButton")
+          .addEventListener("click", function (e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById("filterDropdown");
+            if (dropdown) {
+              dropdown.classList.toggle("hidden");
+            }
+          });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", function (e) {
+          const dropdown = document.getElementById("filterDropdown");
+          const button = document.getElementById("filterDropdownButton");
+          if (
+            dropdown &&
+            !dropdown.contains(e.target) &&
+            !button.contains(e.target)
+          ) {
+            dropdown.classList.add("hidden");
+          }
+        });
+
+        // Add event listener for the 'Add Report' button
+        document
+          .getElementById("addReportBtn")
+          .addEventListener("click", function () {
+            openEditModal(null); // null indicates we're adding a new report
+          });
+
+        // Add form submission handler
+        document
+          .getElementById("reportForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            saveReport(formData);
+          });
+
+        // Add close modal handlers
+        document
+          .getElementById("closeModal")
+          .addEventListener("click", closeModal);
+
+        // Close modal when clicking outside the form area
+        document
+          .getElementById("editReportModal")
+          .addEventListener("click", function (e) {
+            if (e.target === this) {
+              closeModal();
+            }
+          });
+
+        // Add search functionality
+        document
+          .getElementById("simple-search")
+          .addEventListener("input", function () {
+            filterTable(this.value);
+          });
+
+        // Add refresh table button listener
+        document
+          .getElementById("refreshTableBtn")
+          .addEventListener("click", refreshTable);
+
+        // Add clear filters button listener
+        document
+          .getElementById("clearFiltersBtn")
+          .addEventListener("click", clearAllFilters);
+
+        // Add export button listener
+        document
+          .querySelector(
+            'button:has(svg[viewbox="0 0 24 24"][stroke-width="2"])'
+          )
+          .addEventListener("click", exportToExcel);
+
+        // Add pagination event listeners
+        document
+          .querySelector(".pagination-buttons")
+          .addEventListener("click", handlePagination);
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+        // Calculate metrics based on reports data
+        const totalReports = reports.length;
+        const onTimeReports = reports.filter(report => {
+          const status = calculateStatus(report.dueDate, report.submittedDate);
+          return status === "Submitted";
+        }).length;
+        const lateReports = reports.filter(report => {
+          const status = calculateStatus(report.dueDate, report.submittedDate);
+          return status.includes("Late");
+        }).length;
+
+        const onTimePercentage = totalReports > 0 ? ((onTimeReports / totalReports) * 100).toFixed(2) : 0;
+        const latePercentage = totalReports > 0 ? ((lateReports / totalReports) * 100).toFixed(2) : 0;
+
+        // Update On-Time metric
+        document.getElementById('metricCustomers').textContent = onTimeReports;
+        document.getElementById('metricCustomersChange').innerHTML = `
+          <svg class="fill-current" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M6 0C2.68629 0 0 2.68629 0 6C0 9.31371 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0ZM6 1.5C8.48528 1.5 10.5 3.51472 10.5 6C10.5 8.48528 8.48528 10.5 6 10.5C3.51472 10.5 1.5 8.48528 1.5 6C1.5 3.51472 3.51472 1.5 6 1.5ZM6 3C6.41421 3 6.75 3.33579 6.75 3.75V6.43934L8.53033 8.21967C8.82322 8.51256 8.82322 8.98744 8.53033 9.28033C8.23744 9.57322 7.76256 9.57322 7.46967 9.28033L5.46967 7.28033C5.32902 7.13968 5.25 6.94891 5.25 6.75V3.75C5.25 3.33579 5.58579 3 6 3Z" fill=""/>
+          </svg>
+          ${onTimePercentage}%`;
+
+        // Update Late metric
+        document.getElementById('metricOrders').textContent = lateReports;
+        document.getElementById('metricOrdersChange').innerHTML = `
+          <svg class="fill-current" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M6 0C2.68629 0 0 2.68629 0 6C0 9.31371 2.68629 12 6 12C9.31371 12 12 9.31371 12 6C12 2.68629 9.31371 0 6 0ZM6 1.5C8.48528 1.5 10.5 3.51472 10.5 6C10.5 8.48528 8.48528 10.5 6 10.5C3.51472 10.5 1.5 8.48528 1.5 6C1.5 3.51472 3.51472 1.5 6 1.5ZM6 3C6.41421 3 6.75 3.33579 6.75 3.75V6.43934L8.53033 8.21967C8.82322 8.51256 8.82322 8.98744 8.53033 9.28033C8.23744 9.57322 7.76256 9.57322 7.46967 9.28033L5.46967 7.28033C5.32902 7.13968 5.25 6.94891 5.25 6.75V3.75C5.25 3.33579 5.58579 3 6 3Z" fill=""/>
+          </svg>
+          ${latePercentage}%`;
+
+        // Chart One: Monthly Sales (Bar)
+        var chartOne = new ApexCharts(document.querySelector("#chartOne"), {
+          chart: {
+            type: 'bar',
+            height: 180,
+            toolbar: { show: false },
+            fontFamily: 'Outfit, sans-serif',
+          },
+          series: [{
+            name: 'Sales',
+            data: [168, 385, 201, 298, 187, 195, 291, 110, 215, 390, 280, 112],
+          }],
+          xaxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: { style: { colors: '#373d3f' } },
+          },
+          colors: ['#465fff'],
+          plotOptions: {
+            bar: { borderRadius: 6, columnWidth: '40%' }
+          },
+          grid: { borderColor: '#e0e0e0' },
+          dataLabels: { enabled: false },
+          legend: { show: false },
+        });
+        chartOne.render();
+
+        // Chart Two: Monthly Target (Radial)
+        var chartTwo = new ApexCharts(document.querySelector("#chartTwo"), {
+          chart: {
+            type: 'radialBar',
+            height: 229,
+            fontFamily: 'Outfit, sans-serif',
+          },
+          series: [75.55],
+          labels: ['Progress'],
+          colors: ['#465fff'],
+          plotOptions: {
+            radialBar: {
+              hollow: { size: '60%' },
+              track: { background: 'rgba(228,231,236,0.85)' },
+              dataLabels: {
+                value: {
+                  fontSize: '36px',
+                  fontWeight: 600,
+                  color: '#1d2939',
+                  show: true,
+                  offsetY: 16,
+                  formatter: function (val) { return val + '%'; }
+                },
+                name: { show: false },
+              },
+            },
+          },
+          stroke: { lineCap: 'round' },
+        });
+        chartTwo.render();
+
+        // Chart Three: Statistics (Area)
+        var chartThree = new ApexCharts(document.querySelector("#chartThree"), {
+          chart: {
+            type: 'area',
+            height: 310,
+            fontFamily: 'Outfit, sans-serif',
+            toolbar: { show: false },
+          },
+          series: [
+            {
+              name: 'Statistics',
+              data: [120, 150, 170, 140, 180, 210, 190, 220, 200, 230, 210, 250],
+            },
+          ],
+          xaxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            labels: { style: { colors: '#373d3f' } },
+          },
+          colors: ['#465fff'],
+          fill: {
+            type: 'gradient',
+            gradient: {
+              shadeIntensity: 1,
+              opacityFrom: 0.55,
+              opacityTo: 0,
+              stops: [0, 100],
+              colorStops: [
+                {
+                  offset: 0,
+                  color: '#465fff',
+                  opacity: 0.55
+                },
+                {
+                  offset: 100,
+                  color: '#a3afff',
+                  opacity: 0
+                }
+              ]
+            }
+          },
+          grid: { borderColor: '#e0e0e0' },
+          dataLabels: { enabled: false },
+          stroke: { curve: 'smooth', width: 3 },
+          legend: { show: false },
+        });
+        chartThree.render();
+      });
+    </script>
+  </body>
+</html>
