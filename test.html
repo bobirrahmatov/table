@@ -1,0 +1,148 @@
+// 1. UPLOAD NEW ATTACHMENT
+// Method: POST
+const uploadAttachment = async (pageId, file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('comment', 'Uploaded via API');
+
+  const response = await fetch(`https://your-domain.atlassian.net/wiki/rest/api/content/${pageId}/child/attachment`, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Basic ' + btoa('email:api-token'),
+      'X-Atlassian-Token': 'no-check'
+    },
+    body: formData
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  }
+  
+  return await response.json();
+};
+
+// 2. UPDATE EXISTING ATTACHMENT FILE
+// Method: POST (with attachmentId in URL)
+const updateAttachmentFile = async (pageId, attachmentId, newFile) => {
+  const formData = new FormData();
+  formData.append('file', newFile);
+  formData.append('comment', 'Updated via API');
+
+  const response = await fetch(`https://your-domain.atlassian.net/wiki/rest/api/content/${pageId}/child/attachment/${attachmentId}/data`, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Basic ' + btoa('email:api-token'),
+      'X-Atlassian-Token': 'no-check'
+    },
+    body: formData
+  });
+
+  return await response.json();
+};
+
+// 3. UPDATE ATTACHMENT METADATA (title, comment, etc.)
+// Method: PUT
+const updateAttachmentMetadata = async (attachmentId, metadata) => {
+  const response = await fetch(`https://your-domain.atlassian.net/wiki/rest/api/content/${attachmentId}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Basic ' + btoa('email:api-token'),
+      'Content-Type': 'application/json',
+      'X-Atlassian-Token': 'no-check'
+    },
+    body: JSON.stringify({
+      version: {
+        number: metadata.currentVersion + 1  // Must increment version
+      },
+      title: metadata.newTitle,
+      type: 'attachment'
+    })
+  });
+
+  return await response.json();
+};
+
+// 4. GET ATTACHMENT INFO
+// Method: GET
+const getAttachment = async (attachmentId) => {
+  const response = await fetch(`https://your-domain.atlassian.net/wiki/rest/api/content/${attachmentId}?expand=version,space`, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Basic ' + btoa('email:api-token'),
+      'Accept': 'application/json'
+    }
+  });
+
+  return await response.json();
+};
+
+// 5. LIST PAGE ATTACHMENTS
+// Method: GET
+const listPageAttachments = async (pageId) => {
+  const response = await fetch(`https://your-domain.atlassian.net/wiki/rest/api/content/${pageId}/child/attachment?expand=version`, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Basic ' + btoa('email:api-token'),
+      'Accept': 'application/json'
+    }
+  });
+
+  return await response.json();
+};
+
+// CURL EXAMPLES:
+
+/* 
+// Upload new attachment
+curl -X POST \
+  "https://your-domain.atlassian.net/wiki/rest/api/content/PAGE_ID/child/attachment" \
+  -H "Authorization: Basic BASE64_EMAIL:TOKEN" \
+  -H "X-Atlassian-Token: no-check" \
+  -F "file=@/path/to/file.pdf" \
+  -F "comment=API upload"
+
+// Update attachment metadata
+curl -X PUT \
+  "https://your-domain.atlassian.net/wiki/rest/api/content/ATTACHMENT_ID" \
+  -H "Authorization: Basic BASE64_EMAIL:TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "X-Atlassian-Token: no-check" \
+  -d '{
+    "version": {"number": 2},
+    "title": "Updated filename.pdf",
+    "type": "attachment"
+  }'
+
+// Update attachment file
+curl -X POST \
+  "https://your-domain.atlassian.net/wiki/rest/api/content/PAGE_ID/child/attachment/ATTACHMENT_ID/data" \
+  -H "Authorization: Basic BASE64_EMAIL:TOKEN" \
+  -H "X-Atlassian-Token: no-check" \
+  -F "file=@/path/to/newfile.pdf"
+*/
+
+// PYTHON EXAMPLE
+/*
+import requests
+import base64
+
+def upload_attachment(page_id, file_path, auth_email, api_token):
+    url = f"https://your-domain.atlassian.net/wiki/rest/api/content/{page_id}/child/attachment"
+    
+    auth = base64.b64encode(f"{auth_email}:{api_token}".encode()).decode()
+    
+    headers = {
+        'Authorization': f'Basic {auth}',
+        'X-Atlassian-Token': 'no-check'
+    }
+    
+    files = {'file': open(file_path, 'rb')}
+    data = {'comment': 'Uploaded via Python'}
+    
+    response = requests.post(url, headers=headers, files=files, data=data)
+    
+    if response.status_code == 405:
+        print("405 Error - Check your HTTP method and endpoint URL")
+    
+    return response.json()
+*/
