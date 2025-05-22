@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confluence Excel Attachment Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        .section h2 {
+            color: #555;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .excel-preview {
+            max-height: 400px;
+            overflow: auto;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Confluence Excel Editor</h1>
+        
+        <!-- Configuration Section -->
+        <div class="section">
+            <h2>⚙️ Confluence Configuration</h2>
+            <div class="grid">
+                <div class="form-group">
+                    <label for="confluenceUrl">Confluence Base URL:</label>
+                    <input type="text" id="confluenceUrl" placeholder="https://your-domain.atlassian.net" />
+                </div>
+                <div class="form-group">
+                    <label for="contentId">Content ID:</label>
+                    <input type="text" id="contentId" placeholder="123456789" />
+                </div>
+            </div>
+            <div class="grid">
+                <div class="form-group">
+                    <label for="attachmentId">Attachment ID (optional for new files):</label>
+                    <input type="text" id="attachmentId" placeholder="987654321" />
+                </div>
+                <div class="form-group">
+                    <label for="filename">Filename:</label>
+                    <input type="text" id="filename" value="database.xlsx" />
+                </div>
+            </div>
+        </div>
+
+        <!-- File Upload Section -->
+        <div class="section">
+            <h2>📁 Load Excel File</h2>
+            <div class="form-group">
+                <label for="fileInput">Upload Excel File to Edit:</label>
+                <input type="file" id="fileInput" accept=".xlsx,.xls" />
+            </div>
+            <button onclick="loadExcelFile()">Load & Preview File</button>
+            <button onclick="createSampleFile()">Create Sample Excel</button>
+        </div>
+
+        <!-- Excel Preview and Editing -->
+        <div class="section">
+            <h2>📊 Excel Preview & Editing</h2>
+            <div id="excelPreview" class="excel-preview">
+                <p>Load an Excel file to see its contents here...</p>
+            </div>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="newRowData">Add New Row (comma-separated values):</label>
+                <input type="text" id="newRowData" placeholder="Value1, Value2, Value3..." />
+                <button onclick="addRowToExcel()" style="margin-top: 10px;">Add Row</button>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="section">
+            <h2>☁️ Upload to Confluence</h2>
+            <div class="form-group">
+                <label for="comment">Update Comment:</label>
+                <textarea id="comment" rows="3" placeholder="Describe your changes...">Updated Excel file via API</textarea>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="minorEdit" checked> Minor Edit
+                </label>
+            </div>
+            <button onclick="uploadToConfluence()" id="uploadBtn">Upload Modified File</button>
+        </div>
+
+        <!-- Status Display -->
+        <div id="statusContainer"></div>
+
+        <!-- Code Example -->
+        <div class="section">
+            <h2>💻 Generated Code Example</h2>
+            <div class="code-example" id="codeExample">
+                <!-- Code will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentWorkbook = null;
+        let currentWorksheet = null;
+
+        // Create a sample Excel file for demonstration
+        function createSampleFile() {
+            const wb = XLSX.utils.book_new();
+            const sampleData = [
+                ['Name', 'Age', 'City', 'Email'],
+                ['John Doe', 30, 'New York', 'john@example.com'],
+                ['Jane Smith', 25, 'Los Angeles', 'jane@example.com'],
+                ['Bob Johnson', 35, 'Chicago', 'bob@example.com']
+            ];
+            
+            const ws = XLSX.utils.aoa_to_sheet(sampleData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+            
+            currentWorkbook = wb;
+            currentWorksheet = ws;
+            
+            displayExcelPreview();
+            showStatus('Sample Excel file created successfully!', 'success');
+        }
+
+        // Load and preview Excel file
+        function loadExcelFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showStatus('Please select an Excel file first.', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    
+                    currentWorkbook = workbook;
+                    currentWorksheet = workbook.Sheets[workbook.SheetNames[0]];
+                    
+                    displayExcelPreview();
+                    showStatus('Excel file loaded successfully!', 'success');
+                } catch (error) {
+                    showStatus('Error reading Excel file: ' + error.message, 'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // Display Excel content as HTML table
+        function displayExcelPreview() {
+            if (!currentWorksheet) return;
+            
+            const htmlStr = XLSX.utils.sheet_to_html(currentWorksheet);
+            document.getElementById('excelPreview').innerHTML = htmlStr;
+        }
+
+        // Add a new row to the Excel file
+        function addRowToExcel() {
+            if (!currentWorkbook || !currentWorksheet) {
+                showStatus('Please load an Excel file first.', 'error');
+                return;
+            }
+
+            const newRowData = document.getElementById('newRowData').value;
+            if (!newRowData.trim()) {
+                showStatus('Please enter row data.', 'error');
+                return;
+            }
+
+            try {
+                // Convert worksheet to array of arrays
+                const data = XLSX.utils.sheet_to_json(currentWorksheet, {header: 1});
+                
+                // Add new row
+                const newRow = newRowData.split(',').map(cell => cell.trim());
+                data.push(newRow);
+                
+                // Create new worksheet from updated data
+                currentWorksheet = XLSX.utils.aoa_to_sheet(data);
+                currentWorkbook.Sheets[currentWorkbook.SheetNames[0]] = currentWorksheet;
+                
+                displayExcelPreview();
+                document.getElementById('newRowData').value = '';
+                showStatus('Row added successfully!', 'success');
+            } catch (error) {
+                showStatus('Error adding row: ' + error.message, 'error');
+            }
+        }
+
+        // Upload modified Excel file to Confluence
+        async function uploadToConfluence() {
+            if (!currentWorkbook) {
+                showStatus('Please load or create an Excel file first.', 'error');
+                return;
+            }
+
+            const confluenceUrl = document.getElementById('confluenceUrl').value.trim();
+            const contentId = document.getElementById('contentId').value.trim();
+            const attachmentId = document.getElementById('attachmentId').value.trim();
+            const filename = document.getElementById('filename').value.trim();
+            const comment = document.getElementById('comment').value.trim();
+            const minorEdit = document.getElementById('minorEdit').checked;
+
+            if (!confluenceUrl || !contentId || !filename) {
+                showStatus('Please fill in all required fields (Confluence URL, Content ID, Filename).', 'error');
+                return;
+            }
+
+            try {
+                showStatus('Preparing file for upload...', 'info');
+                
+                // Convert workbook to binary
+                const outData = XLSX.write(currentWorkbook, {bookType:'xlsx', type: 'binary'});
+                
+                // Convert binary string to ArrayBuffer
+                const convert = s => {
+                    const buf = new ArrayBuffer(s.length);
+                    const view = new Uint8Array(buf);
+                    for (let i = 0; i < s.length; ++i) {
+                        view[i] = s.charCodeAt(i) & 0xFF;
+                    }
+                    return buf;
+                };
+                
+                const dataArray = convert(outData);
+                const theFile = new File([dataArray], filename, {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+                
+                // Construct API path
+                let path;
+                if (attachmentId) {
+                    // Update existing attachment
+                    path = `${confluenceUrl}/rest/api/content/${contentId}/child/attachment/${attachmentId}/data`;
+                } else {
+                    // Create new attachment
+                    path = `${confluenceUrl}/rest/api/content/${contentId}/child/attachment`;
+                }
+                
+                // Prepare form data
+                const fdata = new FormData();
+                fdata.append('file', theFile);
+                fdata.append('comment', comment || "Updated via Excel Editor");
+                fdata.append('minorEdit', minorEdit.toString());
+                
+                showStatus('Uploading file to Confluence...', 'info');
+                
+                // Make the API call
+                const response = await fetch(path, {
+                    method: "POST",
+                    headers: {"X-Atlassian-Token": "nocheck"},
+                    body: fdata
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showStatus('File uploaded successfully to Confluence!', 'success');
+                    updateCodeExample(path, theFile, comment, minorEdit);
+                } else {
+                    showStatus(`Upload failed: ${result.message || 'Unknown error'}`, 'error');
+                }
+                
+            } catch (error) {
+                showStatus('Error uploading file: ' + error.message, 'error');
+            }
+        }
+
+        // Show status messages
+        function showStatus(message, type) {
+            const container = document.getElementById('statusContainer');
+            const statusDiv = document.createElement('div');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+            
+            container.innerHTML = '';
+            container.appendChild(statusDiv);
+            
+            // Auto-hide after 5 seconds for success messages
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusDiv.style.opacity = '0';
+                    setTimeout(() => statusDiv.remove(), 300);
+                }, 5000);
+            }
+        }
+
+        // Update code example
+        function updateCodeExample(path, file, comment, minorEdit) {
+            const codeExample = document.getElementById('codeExample');
+            codeExample.innerHTML = `
+<strong>Complete Upload Code:</strong>
+<pre>
+// 1. Process Excel file
+var outData = XLSX.write(wb, {bookType:'xlsx', type: 'binary'});
+
+// 2. Convert binary to ArrayBuffer
+var convert = s => {
+    var buf = new ArrayBuffer(s.length); 
+    var view = new Uint8Array(buf);
+    for (var i=0; i&lt;s.length; ++i) {
+        view[i] = s.charCodeAt(i) & 0xFF;
+    } 
+    return buf;
+};
+var dataArray = convert(outData);
+
+// 3. Create File object
+var thefile = new File([dataArray], "${file.name}", {
+    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+});
+
+// 4. Set up API path and form data
+path = "${path}";
+var fdata = new FormData();
+fdata.append('file', thefile);
+fdata.append('comment', "${comment}");
+fdata.append('minorEdit', "${minorEdit}");
+
+// 5. Upload to Confluence
+var response = await fetch(path, {
+    method: "POST",
+    headers: {"X-Atlassian-Token": "nocheck"},
+    body: fdata
+});
+var result = await response.json();
+console.log('Upload result:', result);
+</pre>
+            `;
+        }
+
+        // Initialize with basic code example
+        window.onload = function() {
+            updateCodeExample('/rest/api/content/CONTENT_ID/child/attachment/ATTACHMENT_ID/data', 
+                            {name: 'database.xlsx'}, 
+                            'Updated via Excel Editor', 
+                            true);
+        };
+    </script>
+</body>
+</html>
