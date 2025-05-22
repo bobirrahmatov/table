@@ -415,14 +415,6 @@
     </div>
 
     <script>
-        // Function to get the current month's working file name (like table5.html)
-        function getCurrentMonthWorkingFile() {
-            const now = new Date();
-            const month = now.toLocaleString('default', { month: 'long' }).toLowerCase();
-            const year = now.getFullYear();
-            return `tasks_${month}_${year}.json`;
-        }
-
         // Function to fetch tasks from Confluence (always use tasks.json)
         async function fetchTasks() {
             try {
@@ -771,7 +763,6 @@
 
             // Function to open modal for editing
             function openEditModal(taskData) {
-                console.log('Opening edit modal with data:', taskData);
                 // Hide all dropdowns before opening modal
                 document.querySelectorAll('.task-menu-dropdown').forEach(d => {
                     d.classList.add('hidden');
