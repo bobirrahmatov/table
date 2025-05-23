@@ -544,6 +544,20 @@
             `;
         }
 
+        // Show no data state
+        function showNoDataState() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="py-8">
+                        <div class="flex items-center justify-center">
+                            <span class="text-gray-600 dark:text-gray-400">No data available</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+
         // Update notification function to handle error type
         function showNotification(title, message, type = 'notification') {
             const container = document.getElementById('notificationsContainer');
@@ -616,28 +630,15 @@
                     filteredData = [...data];
                     updateTable();
                 } else {
+                    showNoDataState();
                     showNotification('Error', 'Failed to load data from Confluence', 'error');
                 }
             } catch (error) {
                 console.error('Error initializing table:', error);
+                showNoDataState();
                 showNotification('Error', 'Failed to initialize table', 'error');
             }
         }
-
-        // Add refresh functionality
-        function refreshData() {
-            initializeTable();
-        }
-
-        // Add refresh button to the header
-        document.querySelector('.flex.items-center.gap-2').insertAdjacentHTML('beforeend', `
-            <button onclick="refreshData()" class="tooltip tooltip-blue rounded-lg bg-blue-100 p-2 text-blue-600 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:hover:bg-blue-900/50">
-                <span class="tooltip-text">Refresh data</span>
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                </svg>
-            </button>
-        `);
 
         // Call initializeTable when the page loads
         document.addEventListener('DOMContentLoaded', initializeTable);
