@@ -1,0 +1,27 @@
+<div id="tailwind-root" style="display:none;"></div>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: '#1E40AF',
+        },
+      },
+    },
+  };
+
+  const html = `
+    <div class="max-w-xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-4">
+      <h2 class="text-2xl font-bold text-primary mb-2">Tailwind is Loaded</h2>
+      <p class="text-gray-700">This content is styled with Tailwind classes.</p>
+    </div>
+  `;
+
+  window.addEventListener('load', () => {
+    const root = document.getElementById('tailwind-root');
+    root.innerHTML = html;
+    root.style.display = 'block';
+  });
+</script>
