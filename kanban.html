@@ -548,9 +548,19 @@
                     group: 'kanban',
                     animation: 150,
                     ghostClass: 'bg-gray-100',
-                    onEnd: function (evt) {
+                    onEnd: async function (evt) {
                         updateTaskCounters();
-                        // No need to call updateTableView here, MutationObserver handles it
+                        try {
+                            // Get all tasks from DOM after the move
+                            const allTasks = getAllTasksFromDOM();
+                            // Save the updated tasks to Confluence
+                            await saveTasks(allTasks);
+                            // showNotification('Task status updated successfully', 'success'); // Optional notification
+                        } catch (error) {
+                            console.error('Error saving task status after drag and drop:', error);
+                            showNotification('Error updating task status. Please refresh.', 'error');
+                            // Optionally revert the drag and drop or show error state
+                        }
                     }
                 });
             });
@@ -762,6 +772,22 @@
                 }
             }
 
+            // Helper function to get all tasks from the DOM
+            function getAllTasksFromDOM() {
+                return Array.from(document.querySelectorAll('.task-card')).map(card => ({
+                    id: card.dataset.id,
+                    title: card.querySelector('h3').textContent,
+                    description: card.querySelector('p').textContent,
+                    tagColor: card.querySelector('span').classList.value.split(' ').find(cls => cls.startsWith('bg-')).replace('bg-', '').replace('-100', ''),
+                    tagText: card.querySelector('span').textContent,
+                    priority: card.dataset.priority,
+                    assignedUser: card.dataset.assignedUser,
+                    startDate: card.dataset.startDate,
+                    dueDate: card.dataset.dueDate,
+                    column: card.closest('.task-list').id.replace('-column', '')
+                }));
+            }
+
             // Submit task form
             taskForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
@@ -806,19 +832,7 @@
                     }
 
                     // Save to Confluence
-                    const allTasks = Array.from(document.querySelectorAll('.task-card')).map(card => ({
-                        id: card.dataset.id,
-                        title: card.querySelector('h3').textContent,
-                        description: card.querySelector('p').textContent,
-                        tagColor: card.querySelector('span').classList.value.split(' ').find(cls => cls.startsWith('bg-')).replace('bg-', '').replace('-100', ''),
-                        tagText: card.querySelector('span').textContent,
-                        priority: card.dataset.priority,
-                        assignedUser: card.dataset.assignedUser,
-                        startDate: card.dataset.startDate,
-                        dueDate: card.dataset.dueDate,
-                        column: card.closest('.task-list').id.replace('-column', '')
-                    }));
-
+                    const allTasks = getAllTasksFromDOM();
                     await saveTasks(allTasks);
 
                     // Show success notification after Confluence save
