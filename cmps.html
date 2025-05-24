@@ -454,8 +454,11 @@
             document.getElementById('totalPages').textContent = totalPages;
 
             // Update button states
-            document.querySelector('button[onclick="previousPage()"]').disabled = currentPage === 1;
-            document.querySelector('button[onclick="nextPage()"]').disabled = currentPage === totalPages;
+            const prevButton = document.querySelector('button[onclick="previousPage()"]');
+            const nextButton = document.querySelector('button[onclick="nextPage()"]');
+            
+            if (prevButton) prevButton.disabled = currentPage === 1;
+            if (nextButton) nextButton.disabled = currentPage === totalPages;
         }
 
         function addPageButton(pageNum) {
@@ -489,7 +492,11 @@
             const end = start + itemsPerPage;
             const pageData = filteredData.slice(start, end);
 
-            tableBody.innerHTML = pageData.map(createTableRow).join('');
+            if (pageData.length === 0) {
+                showNoDataState();
+            } else {
+                tableBody.innerHTML = pageData.map(createTableRow).join('');
+            }
             updatePagination();
         }
 
@@ -621,7 +628,11 @@
                 if (data && data.length > 0) {
                     tableData = data;
                     filteredData = [...data];
+                    // Initialize pagination variables
+                    currentPage = 1;
+                    itemsPerPage = parseInt(document.getElementById('itemsPerPage').value);
                     updateTable();
+                    showNotification('Success', `Loaded ${data.length} items successfully`, 'notification');
                 } else {
                     showNoDataState();
                     showNotification('Error', 'Failed to load data from Confluence', 'error');
