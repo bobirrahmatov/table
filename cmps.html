@@ -406,9 +406,9 @@
                                 </svg>
                             </button>
                             <a href="${item.shopLink}" target="_blank" class="tooltip tooltip-green rounded-lg bg-green-100 p-2 text-green-600 hover:bg-green-200">
-                                <span class="tooltip-text">Open in new window</span>
+                                <span class="tooltip-text">Order the marketplace request</span>
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                 </svg>
                             </a>
                             <a href="${item.downloadLink}" download class="tooltip tooltip-purple rounded-lg bg-purple-100 p-2 text-purple-600 hover:bg-purple-200">
@@ -662,11 +662,24 @@
         // Search functionality
         document.querySelector('input[type="text"]').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
-            filteredData = tableData.filter(item => 
-                Object.values(item).some(value => 
+            console.log('Search term:', searchTerm);
+            console.log('Table data before filter:', tableData);
+            
+            filteredData = tableData.filter(item => {
+                // Check if item is valid
+                if (!item) return false;
+                
+                // Get all values from the item, excluding undefined and null
+                const values = Object.values(item).filter(value => value != null);
+                console.log('Item values:', values);
+                
+                // Check if any value includes the search term
+                return values.some(value => 
                     String(value).toLowerCase().includes(searchTerm)
-                )
-            );
+                );
+            });
+            
+            console.log('Filtered data:', filteredData);
             currentPage = 1; // Reset to first page when searching
             updateTable();
         });
