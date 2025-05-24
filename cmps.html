@@ -121,6 +121,12 @@
                         </div>
 
                         <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                            <button onclick="refreshData()" class="text-theme-sm shadow-theme-xs flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-2 py-2 font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-800 sm:px-3.5">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                <span class="hidden sm:inline">Refresh</span>
+                            </button>
                             <form>
                                 <div class="relative">
                                     <span class="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2">
@@ -222,6 +228,35 @@
     </div>
 
     <script>
+        // Global variables for table data
+        let tableData = [];
+        let filteredData = [];
+        let currentPage = 1;
+        let itemsPerPage = 10;
+
+        // Function to refresh data
+        async function refreshData() {
+            showLoadingState();
+            try {
+                const data = await fetchDataFromConfluence();
+                if (data && data.length > 0) {
+                    tableData = data;
+                    filteredData = [...data];
+                    currentPage = 1;
+                    itemsPerPage = parseInt(document.getElementById('itemsPerPage').value);
+                    updateTable();
+                    showNotification('Success', `Refreshed ${data.length} items successfully`, 'notification');
+                } else {
+                    showNoDataState();
+                    showNotification('Error', 'Failed to refresh data from Confluence', 'error');
+                }
+            } catch (error) {
+                console.error('Error refreshing data:', error);
+                showNoDataState();
+                showNotification('Error', 'Failed to refresh data', 'error');
+            }
+        }
+
         // Function to fetch and parse Excel/CSV data from Confluence
         async function fetchDataFromConfluence() {
             try {
