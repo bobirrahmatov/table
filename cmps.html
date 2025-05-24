@@ -655,22 +655,71 @@
             }, 5000);
         }
 
-        // Initialize table with data from Confluence
+        // Dummy data for testing
+        const dummyData = [
+            {
+                name: "MacBook Pro 16",
+                description: "Apple MacBook Pro 16-inch with M2 Pro chip",
+                category: "Dev",
+                region: "NAM",
+                copyLink: "https://example.com/macbook",
+                shopLink: "https://apple.com/macbook",
+                downloadLink: "https://example.com/macbook-specs.pdf"
+            },
+            {
+                name: "Dell XPS 15",
+                description: "Dell XPS 15 Laptop with Intel i9",
+                category: "New Hire",
+                region: "EMEA",
+                copyLink: "https://example.com/dell",
+                shopLink: "https://dell.com/xps",
+                downloadLink: "https://example.com/dell-specs.pdf"
+            },
+            {
+                name: "Microsoft Surface",
+                description: "Microsoft Surface Laptop Studio",
+                category: "Drive",
+                region: "APAC",
+                copyLink: "https://example.com/surface",
+                shopLink: "https://microsoft.com/surface",
+                downloadLink: "https://example.com/surface-specs.pdf"
+            },
+            {
+                name: "Lenovo ThinkPad",
+                description: "Lenovo ThinkPad X1 Carbon",
+                category: "BAU",
+                region: "LATAM",
+                copyLink: "https://example.com/thinkpad",
+                shopLink: "https://lenovo.com/thinkpad",
+                downloadLink: "https://example.com/thinkpad-specs.pdf"
+            },
+            {
+                name: "HP Spectre",
+                description: "HP Spectre x360 Convertible",
+                category: "Learning",
+                region: "GLOBAL",
+                copyLink: "https://example.com/spectre",
+                shopLink: "https://hp.com/spectre",
+                downloadLink: "https://example.com/spectre-specs.pdf"
+            }
+        ];
+
+        // Initialize table with data
         async function initializeTable() {
             showLoadingState();
             try {
-                const data = await fetchDataFromConfluence();
+                // Use dummy data for testing
+                const data = dummyData;
                 if (data && data.length > 0) {
                     tableData = data;
                     filteredData = [...data];
-                    // Initialize pagination variables
                     currentPage = 1;
                     itemsPerPage = parseInt(document.getElementById('itemsPerPage').value);
                     updateTable();
                     showNotification('Success', `Loaded ${data.length} items successfully`, 'notification');
                 } else {
                     showNoDataState();
-                    showNotification('Error', 'Failed to load data from Confluence', 'error');
+                    showNotification('Error', 'No data available', 'error');
                 }
             } catch (error) {
                 console.error('Error initializing table:', error);
@@ -690,12 +739,11 @@
         });
 
         // Search functionality
-        const searchInput = document.querySelector('input[type="text"]');
-        searchInput.addEventListener('input', (e) => {
+        document.querySelector('input[type="text"]').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
             filteredData = tableData.filter(item => 
                 Object.values(item).some(value => 
-                    value.toString().toLowerCase().includes(searchTerm)
+                    String(value).toLowerCase().includes(searchTerm)
                 )
             );
             currentPage = 1; // Reset to first page when searching
