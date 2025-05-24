@@ -285,7 +285,7 @@
                 const workbook = XLSX.read(arrayBuffer, { type: 'array' });
                 
                 // Get the first worksheet
-                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const firstSheet = workbook.Sheets[workbook.SheetsNames[0]];
                 
                 // Convert to JSON
                 const jsonData = XLSX.utils.sheet_to_json(firstSheet);
@@ -655,61 +655,11 @@
             }, 5000);
         }
 
-        // Dummy data for testing
-        const dummyData = [
-            {
-                name: "MacBook Pro 16",
-                description: "Apple MacBook Pro 16-inch with M2 Pro chip",
-                category: "Dev",
-                region: "NAM",
-                copyLink: "https://example.com/macbook",
-                shopLink: "https://apple.com/macbook",
-                downloadLink: "https://example.com/macbook-specs.pdf"
-            },
-            {
-                name: "Dell XPS 15",
-                description: "Dell XPS 15 Laptop with Intel i9",
-                category: "New Hire",
-                region: "EMEA",
-                copyLink: "https://example.com/dell",
-                shopLink: "https://dell.com/xps",
-                downloadLink: "https://example.com/dell-specs.pdf"
-            },
-            {
-                name: "Microsoft Surface",
-                description: "Microsoft Surface Laptop Studio",
-                category: "Drive",
-                region: "APAC",
-                copyLink: "https://example.com/surface",
-                shopLink: "https://microsoft.com/surface",
-                downloadLink: "https://example.com/surface-specs.pdf"
-            },
-            {
-                name: "Lenovo ThinkPad",
-                description: "Lenovo ThinkPad X1 Carbon",
-                category: "BAU",
-                region: "LATAM",
-                copyLink: "https://example.com/thinkpad",
-                shopLink: "https://lenovo.com/thinkpad",
-                downloadLink: "https://example.com/thinkpad-specs.pdf"
-            },
-            {
-                name: "HP Spectre",
-                description: "HP Spectre x360 Convertible",
-                category: "Learning",
-                region: "GLOBAL",
-                copyLink: "https://example.com/spectre",
-                shopLink: "https://hp.com/spectre",
-                downloadLink: "https://example.com/spectre-specs.pdf"
-            }
-        ];
-
         // Initialize table with data
         async function initializeTable() {
             showLoadingState();
             try {
-                // Use dummy data for testing
-                const data = dummyData;
+                const data = await fetchDataFromConfluence();
                 if (data && data.length > 0) {
                     tableData = data;
                     filteredData = [...data];
@@ -719,7 +669,7 @@
                     showNotification('Success', `Loaded ${data.length} items successfully`, 'notification');
                 } else {
                     showNoDataState();
-                    showNotification('Error', 'No data available', 'error');
+                    showNotification('Error', 'Failed to load data from Confluence or no data available', 'error');
                 }
             } catch (error) {
                 console.error('Error initializing table:', error);
