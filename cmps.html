@@ -6,8 +6,6 @@
     <title>Marketplace Requests</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SheetJS Library -->
-    <script src="https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js"></script>
     <style>
         .custom-scrollbar::-webkit-scrollbar {
             height: 6px;
@@ -257,52 +255,25 @@
             }
         }
 
-        // Function to fetch and parse Excel/CSV data from Confluence
+        // Function to fetch JSON data from Confluence
         async function fetchDataFromConfluence() {
             try {
-                const response = await fetch('https://cedt-confluence.net/confluence/download/attachments/2740868871/marketplace_requests.xlsx?api=v2');
+                // Change the file extension to .json
+                const response = await fetch('https://cedt-confluence.net/confluence/download/attachments/2740868871/marketplace_requests.json?api=v2');
                 
                 if (!response.ok) {
                     throw new Error(`Failed to load data: ${response.status} ${response.statusText}`);
                 }
 
-                // Get the file content as ArrayBuffer
-                const arrayBuffer = await response.arrayBuffer();
+                // Parse the response as JSON
+                const data = await response.json();
                 
-                // Parse Excel/CSV data
-                const data = await parseExcelData(arrayBuffer);
+                // Assuming the JSON data is an array of items directly
                 return data;
+
             } catch (error) {
                 console.error('Error fetching data:', error);
                 return null;
-            }
-        }
-
-        // Function to parse Excel/CSV data
-        async function parseExcelData(arrayBuffer) {
-            try {
-                // Read the file using SheetJS
-                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-                
-                // Get the first worksheet
-                const firstSheet = workbook.Sheets[workbook.SheetsNames[0]];
-                
-                // Convert to JSON
-                const jsonData = XLSX.utils.sheet_to_json(firstSheet);
-                
-                // Map the data to our required format
-                return jsonData.map(row => ({
-                    name: row.Name || row.name,
-                    description: row.Description || row.description,
-                    category: row.Category || row.category,
-                    region: row.Region || row.region,
-                    copyLink: row.CopyLink || row.copyLink,
-                    shopLink: row.ShopLink || row.shopLink,
-                    downloadLink: row.DownloadLink || row.downloadLink
-                }));
-            } catch (error) {
-                console.error('Error parsing Excel data:', error);
-                throw new Error('Failed to parse Excel data');
             }
         }
 
@@ -669,7 +640,7 @@
                     showNotification('Success', `Loaded ${data.length} items successfully`, 'notification');
                 } else {
                     showNoDataState();
-                    showNotification('Error', 'Failed to load data from Confluence or no data available', 'error');
+                    showNotification('Error', 'Failed to load JSON data from Confluence or no data available', 'error');
                 }
             } catch (error) {
                 console.error('Error initializing table:', error);
