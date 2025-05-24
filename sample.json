@@ -1,0 +1,92 @@
+[
+    {
+        "name": "Item 1: Laptop Model A",
+        "description": "High performance laptop for development tasks.",
+        "category": "Dev",
+        "region": "NAM",
+        "copyLink": "https://example.com/item1/copy",
+        "shopLink": "https://example.com/item1/shop",
+        "downloadLink": "https://example.com/item1/download"
+    },
+    {
+        "name": "Item 2: Monitor 4K",
+        "description": "Large 4K monitor for enhanced productivity.",
+        "category": "BAU",
+        "region": "EMEA",
+        "copyLink": "https://example.com/item2/copy",
+        "shopLink": "https://example.com/item2/shop",
+        "downloadLink": "https://example.com/item2/download"
+    },
+    {
+        "name": "Item 3: Ergonomic Keyboard",
+        "description": "Comfortable keyboard for long working hours.",
+        "category": "New Hire",
+        "region": "APAC",
+        "copyLink": "https://example.com/item3/copy",
+        "shopLink": "https://example.com/item3/shop",
+        "downloadLink": "https://example.com/item3/download"
+    },
+    {
+        "name": "Item 4: Wireless Mouse",
+        "description": "Precision wireless mouse with long battery life.",
+        "category": "BAU",
+        "region": "LATAM",
+        "copyLink": "https://example.com/item4/copy",
+        "shopLink": "https://example.com/item4/shop",
+        "downloadLink": "https://example.com/item4/download"
+    },
+    {
+        "name": "Item 5: Noise Cancelling Headphones",
+        "description": "Ideal for focus in noisy environments.",
+        "category": "Drive",
+        "region": "GLOBAL",
+        "copyLink": "https://example.com/item5/copy",
+        "shopLink": "https://example.com/item5/shop",
+        "downloadLink": "https://example.com/item5/download"
+    },
+    {
+        "name": "Item 6: USB-C Hub",
+        "description": "Multi-port adapter for modern laptops.",
+        "category": "New Hire",
+        "region": "NAM",
+        "copyLink": "https://example.com/item6/copy",
+        "shopLink": "https://example.com/item6/shop",
+        "downloadLink": "https://example.com/item6/download"
+    },
+    {
+        "name": "Item 7: External SSD 1TB",
+        "description": "Fast external storage for large files.",
+        "category": "Dev",
+        "region": "EMEA",
+        "copyLink": "https://example.com/item7/copy",
+        "shopLink": "https://example.com/item7/shop",
+        "downloadLink": "https://example.com/item7/download"
+    },
+    {
+        "name": "Item 8: Webcam 1080p",
+        "description": "High definition webcam for video calls.",
+        "category": "BAU",
+        "region": "APAC",
+        "copyLink": "https://example.com/item8/copy",
+        "shopLink": "https://example.com/item8/shop",
+        "downloadLink": "https://example.com/item8/download"
+    },
+    {
+        "name": "Item 9: Desk Lamp with Wireless Charger",
+        "description": "Adjustable desk lamp with integrated phone charger.",
+        "category": "Learning",
+        "region": "LATAM",
+        "copyLink": "https://example.com/item9/copy",
+        "shopLink": "https://example.com/item9/shop",
+        "downloadLink": "https://example.com/item9/download"
+    },
+    {
+        "name": "Item 10: Laptop Stand",
+        "description": "Ergonomic stand to elevate your laptop.",
+        "category": "New Hire",
+        "region": "GLOBAL",
+        "copyLink": "https://example.com/item10/copy",
+        "shopLink": "https://example.com/item10/shop",
+        "downloadLink": "https://example.com/item10/download"
+    }
+]
