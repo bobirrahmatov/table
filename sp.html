@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharePoint Video Uploader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen py-8">
+    <div class="max-w-2xl mx-auto px-4">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-6">Upload Video to SharePoint</h1>
+
+            <!-- File Upload Form -->
+            <div class="mb-6">
+                <label for="videoFile" class="block text-sm font-medium text-gray-700 mb-2">
+                    Select Video File
+                </label>
+                <div
+                    class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-blue-400 transition-colors">
+                    <div class="space-y-1 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none"
+                            viewBox="0 0 48 48">
+                            <path
+                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="flex text-sm text-gray-600">
+                            <label for="videoFile"
+                                class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                <span>Upload a video</span>
+                                <input id="videoFile" name="videoFile" type="file" class="sr-only" accept="video/*">
+                            </label>
+                            <p class="pl-1">or drag and drop</p>
+                        </div>
+                        <p class="text-xs text-gray-500">MP4, AVI, MOV up to 500MB</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Info Display -->
+            <div id="fileInfo" class="hidden mb-6 p-4 bg-blue-50 rounded-md">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-blue-800">Selected File:</h3>
+                        <div id="fileName" class="text-sm text-blue-600"></div>
+                        <div id="fileSize" class="text-xs text-blue-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div id="progressContainer" class="hidden mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-700">Upload Progress</span>
+                    <span id="progressText" class="text-sm text-gray-500">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                        style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Upload Button -->
+            <button id="uploadBtn"
+                class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+                disabled>
+                <span id="uploadBtnText">Select a file to upload</span>
+                <svg id="uploadSpinner" class="hidden animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" fill="none"
+                    viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                </svg>
+            </button>
+
+            <!-- Status Messages -->
+            <div id="statusMessage" class="mt-4 hidden">
+                <div id="successMessage" class="hidden p-4 bg-green-50 border border-green-200 rounded-md">
+                    <div class="flex">
+                        <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-green-800">Upload successful!</p>
+                            <p class="text-sm text-green-700">Your video has been uploaded to SharePoint.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="errorMessage" class="hidden p-4 bg-red-50 border border-red-200 rounded-md">
+                    <div class="flex">
+                        <svg class="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-red-800">Upload failed</p>
+                            <p id="errorText" class="text-sm text-red-700"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration Panel -->
+        <div class="mt-6 bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Configuration</h2>
+            <div class="space-y-4">
+                <div>
+                    <label for="siteUrl" class="block text-sm font-medium text-gray-700 mb-1">SharePoint Site
+                        URL</label>
+                    <input type="text" id="siteUrl"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value="https://citieur.sharepoint.com/teams/SPO_wcmreportinghub" readonly>
+                </div>
+                <div>
+                    <label for="libraryName" class="block text-sm font-medium text-gray-700 mb-1">Document
+                        Library</label>
+                    <input type="text" id="libraryName"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value="training-videos">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class SharePointVideoUploader {
+            constructor() {
+                this.fileInput = document.getElementById('videoFile');
+                this.uploadBtn = document.getElementById('uploadBtn');
+                this.uploadBtnText = document.getElementById('uploadBtnText');
+                this.uploadSpinner = document.getElementById('uploadSpinner');
+                this.fileInfo = document.getElementById('fileInfo');
+                this.fileName = document.getElementById('fileName');
+                this.fileSize = document.getElementById('fileSize');
+                this.progressContainer = document.getElementById('progressContainer');
+                this.progressBar = document.getElementById('progressBar');
+                this.progressText = document.getElementById('progressText');
+                this.statusMessage = document.getElementById('statusMessage');
+                this.successMessage = document.getElementById('successMessage');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.errorText = document.getElementById('errorText');
+                this.siteUrl = document.getElementById('siteUrl').value;
+                this.libraryName = document.getElementById('libraryName').value;
+
+                this.selectedFile = null;
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+                this.uploadBtn.addEventListener('click', () => this.uploadFile());
+
+                // Drag and drop functionality
+                const dropZone = this.fileInput.closest('.border-dashed');
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.add('border-blue-400', 'bg-blue-50');
+                });
+
+                dropZone.addEventListener('dragleave', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('border-blue-400', 'bg-blue-50');
+                });
+
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.classList.remove('border-blue-400', 'bg-blue-50');
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        this.fileInput.files = files;
+                        this.handleFileSelect({ target: { files } });
+                    }
+                });
+            }
+
+            handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    this.selectedFile = file;
+                    this.displayFileInfo(file);
+                    this.uploadBtn.disabled = false;
+                    this.uploadBtnText.textContent = 'Upload Video';
+                    this.hideStatusMessages();
+                } else {
+                    this.selectedFile = null;
+                    this.fileInfo.classList.add('hidden');
+                    this.uploadBtn.disabled = true;
+                    this.uploadBtnText.textContent = 'Select a file to upload';
+                }
+            }
+
+            displayFileInfo(file) {
+                this.fileName.textContent = file.name;
+                this.fileSize.textContent = this.formatFileSize(file.size);
+                this.fileInfo.classList.remove('hidden');
+            }
+
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            async getRequestDigest() {
+                try {
+                    const response = await fetch(`${this.siteUrl}/_api/contextinfo`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json;odata=verbose',
+                            'Content-Type': 'application/json;odata=verbose'
+                        },
+                        credentials: 'include'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Failed to get request digest: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    return data.d.GetContextWebInformation.FormDigestValue;
+                } catch (error) {
+                    console.error('Error getting request digest:', error);
+                    throw error;
+                }
+            }
+
+            async uploadFile() {
+                if (!this.selectedFile) return;
+
+                this.setUploadingState(true);
+                this.hideStatusMessages();
+                this.showProgress(0);
+
+                try {
+                    // Get request digest for authentication
+                    const requestDigest = await this.getRequestDigest();
+
+                    // Upload file using SharePoint REST API
+                    const uploadUrl = `${this.siteUrl}/_api/web/lists/getbytitle('${this.libraryName}')/RootFolder/Files/Add(url='${encodeURIComponent(this.selectedFile.name)}',overwrite=true)`;
+
+                    const response = await this.uploadWithProgress(uploadUrl, requestDigest);
+
+                    if (response.ok) {
+                        this.showProgress(100);
+                        this.showSuccessMessage();
+                        this.resetForm();
+                    } else {
+                        throw new Error(`Upload failed with status: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    this.showErrorMessage(error.message);
+                } finally {
+                    this.setUploadingState(false);
+                }
+            }
+
+            async uploadWithProgress(url, requestDigest) {
+                return new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+
+                    xhr.upload.addEventListener('progress', (e) => {
+                        if (e.lengthComputable) {
+                            const percentComplete = (e.loaded / e.total) * 100;
+                            this.showProgress(percentComplete);
+                        }
+                    });
+
+                    xhr.addEventListener('load', () => {
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            resolve({ ok: true, status: xhr.status });
+                        } else {
+                            reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
+                        }
+                    });
+
+                    xhr.addEventListener('error', () => {
+                        reject(new Error('Network error occurred'));
+                    });
+
+                    xhr.open('POST', url, true);
+                    xhr.setRequestHeader('Accept', 'application/json;odata=verbose');
+                    xhr.setRequestHeader('X-RequestDigest', requestDigest);
+                    xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+
+                    // Create FileReader to read file as array buffer
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        xhr.send(reader.result);
+                    };
+                    reader.onerror = () => {
+                        reject(new Error('Error reading file'));
+                    };
+                    reader.readAsArrayBuffer(this.selectedFile);
+                });
+            }
+
+            setUploadingState(uploading) {
+                this.uploadBtn.disabled = uploading;
+                if (uploading) {
+                    this.uploadBtnText.textContent = 'Uploading...';
+                    this.uploadSpinner.classList.remove('hidden');
+                } else {
+                    this.uploadBtnText.textContent = this.selectedFile ? 'Upload Video' : 'Select a file to upload';
+                    this.uploadSpinner.classList.add('hidden');
+                }
+            }
+
+            showProgress(percent) {
+                this.progressContainer.classList.remove('hidden');
+                this.progressBar.style.width = `${percent}%`;
+                this.progressText.textContent = `${Math.round(percent)}%`;
+            }
+
+            hideProgress() {
+                this.progressContainer.classList.add('hidden');
+                this.progressBar.style.width = '0%';
+                this.progressText.textContent = '0%';
+            }
+
+            showSuccessMessage() {
+                this.statusMessage.classList.remove('hidden');
+                this.successMessage.classList.remove('hidden');
+                this.errorMessage.classList.add('hidden');
+            }
+
+            showErrorMessage(message) {
+                this.statusMessage.classList.remove('hidden');
+                this.errorMessage.classList.remove('hidden');
+                this.successMessage.classList.add('hidden');
+                this.errorText.textContent = message;
+            }
+
+            hideStatusMessages() {
+                this.statusMessage.classList.add('hidden');
+                this.successMessage.classList.add('hidden');
+                this.errorMessage.classList.add('hidden');
+            }
+
+            resetForm() {
+                setTimeout(() => {
+                    this.fileInput.value = '';
+                    this.selectedFile = null;
+                    this.fileInfo.classList.add('hidden');
+                    this.uploadBtn.disabled = true;
+                    this.uploadBtnText.textContent = 'Select a file to upload';
+                    this.hideProgress();
+                }, 2000);
+            }
+        }
+
+        // Initialize the uploader when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new SharePointVideoUploader();
+        });
+    </script>
+</body>
+
+</html>
